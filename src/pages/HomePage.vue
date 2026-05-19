@@ -15,8 +15,7 @@ const totalScore = computed(() => progressStore.totalScore)
 
 <template>
   <div class="h-full flex flex-col bg-background relative overflow-hidden">
-    <img src="/images/karawo.jpeg" class="absolute inset-0 h-60 w-full object-cover pointer-events-none select-none" style="opacity:0.09;" aria-hidden="true" />
-    <!-- Header -->
+     <!-- Header -->
     <header class="w-full px-6 py-2 flex justify-between items-center bg-surface-container-lowest shrink-0 border-b border-outline-variant/30 relative overflow-hidden">
       <img
         src="/images/pattern-card.svg"

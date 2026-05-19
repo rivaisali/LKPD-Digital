@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Translasi - Soal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#783d01",
+                        "on-primary-fixed-variant": "#55377e",
+                        "primary-fixed-dim": "#d8b9ff",
+                        "background": "#f9f9f9",
+                        "primary": "#61438a",
+                        "on-primary-container": "#f4e6ff",
+                        "on-surface-variant": "#4a454f",
+                        "outline-variant": "#ccc3d1",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffdcc4",
+                        "tertiary-fixed-dim": "#ffb2b6",
+                        "surface": "#f9f9f9",
+                        "inverse-surface": "#2f3131",
+                        "surface-container-high": "#e8e8e8",
+                        "tertiary-container": "#b44350",
+                        "on-tertiary-container": "#ffe5e5",
+                        "surface-container-highest": "#e2e2e2",
+                        "outline": "#7b7580",
+                        "on-tertiary-fixed": "#40000d",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#7a5ba4",
+                        "tertiary-fixed": "#ffdadb",
+                        "surface-container": "#eeeeee",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#6e5098",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#6f3800",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#f0f1f1",
+                        "tertiary": "#942b3a",
+                        "surface-bright": "#f9f9f9",
+                        "on-background": "#1a1c1c",
+                        "secondary-container": "#ffab69",
+                        "primary-fixed": "#eddcff",
+                        "on-surface": "#1a1c1c",
+                        "on-secondary-fixed": "#2f1400",
+                        "inverse-primary": "#d8b9ff",
+                        "surface-dim": "#dadada",
+                        "surface-container-low": "#f3f3f4",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#ffb780",
+                        "on-primary-fixed": "#280450",
+                        "on-tertiary-fixed-variant": "#852030",
+                        "surface-variant": "#e2e2e2",
+                        "secondary": "#8e4e14"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "12px",
+                        "stack-lg": "32px",
+                        "gutter": "16px",
+                        "base": "8px",
+                        "stack-md": "20px",
+                        "container-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "display-lg": ["36px", { "lineHeight": "44px", "fontWeight": "800" }],
+                        "headline-lg-mobile": ["22px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col md:max-w-md md:mx-auto md:border-x md:border-outline-variant shadow-xl bg-white overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="bg-tertiary text-on-tertiary flex justify-between items-center w-full px-container-padding py-base docked full-width top-0 z-50 flat no shadows">
+<button aria-label="Kembali" class="text-on-tertiary p-2 rounded-full hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-md md:text-headline-md">Translasi (Pergeseran)</h1>
+<button aria-label="Bantuan" class="text-on-tertiary p-2 rounded-full hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">help</span>
+</button>
+</header>
+<!-- Progress Indicator -->
+<div class="flex justify-center items-center py-stack-sm gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+</div>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col px-container-padding pb-[96px]">
+<!-- Question Card -->
+<div class="bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant p-gutter mb-stack-md">
+<p class="font-body-md text-body-md text-on-surface mb-stack-sm">
+                Nita menggeser motif bunga dari titik A(1, 2) sejauh 4 satuan ke kanan dan 2 satuan ke atas.
+            </p>
+<p class="font-label-lg text-label-lg text-on-surface font-semibold">
+                Tentukan koordinat bayangan titik A!
+            </p>
+</div>
+<!-- Coordinate Grid Area -->
+<div class="relative w-full aspect-square bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant p-4 mb-stack-md flex justify-center items-center">
+<!-- Simulated Grid Background -->
+<div class="absolute inset-0 m-8" style="background-image: linear-gradient(to right, #e2e2e2 1px, transparent 1px), linear-gradient(to bottom, #e2e2e2 1px, transparent 1px); background-size: 14.28% 14.28%;"></div>
+<!-- Axes -->
+<div class="absolute bottom-8 left-8 right-8 border-b-2 border-outline z-10 flex justify-between px-2">
+<span class="text-[10px] text-outline font-medium -mb-4 mt-1">-2</span>
+<span class="text-[10px] text-outline font-medium -mb-4 mt-1">-1</span>
+<span class="text-[10px] text-outline font-medium -mb-4 mt-1">1</span>
+<span class="text-[10px] text-outline font-medium -mb-4 mt-1">2</span>
+<span class="text-[10px] text-outline font-medium -mb-4 mt-1">3</span>
+<span class="text-[10px] text-outline font-medium -mb-4 mt-1">4</span>
+<span class="text-[10px] text-outline font-medium -mb-4 mt-1">5</span>
+<span class="text-[10px] text-outline font-medium -mb-4 mt-1">6</span>
+<span class="text-[10px] text-outline font-medium -mb-4 mt-1">X</span>
+</div>
+<div class="absolute bottom-8 top-8 left-8 border-l-2 border-outline z-10 flex flex-col-reverse justify-between py-2">
+<span class="text-[10px] text-outline font-medium -ml-4 pr-1">-2</span>
+<span class="text-[10px] text-outline font-medium -ml-4 pr-1">-1</span>
+<span class="text-[10px] text-outline font-medium -ml-4 pr-1">1</span>
+<span class="text-[10px] text-outline font-medium -ml-4 pr-1">2</span>
+<span class="text-[10px] text-outline font-medium -ml-4 pr-1">3</span>
+<span class="text-[10px] text-outline font-medium -ml-4 pr-1">4</span>
+<span class="text-[10px] text-outline font-medium -ml-4 pr-1">5</span>
+<span class="text-[10px] text-outline font-medium -ml-4 pr-1">Y</span>
+</div>
+<!-- Karawo Motif Point A -->
+<div class="absolute z-20 flex flex-col items-center" style="left: calc(8px + 3 * 14.28%); bottom: calc(8px + 4 * 14.28%); transform: translate(-50%, 50%);">
+<img alt="Bunga Karawo" class="w-8 h-8 object-cover rounded-full bg-white shadow-sm border border-outline-variant" data-alt="A stylized, simplified illustration of a traditional Gorontalo Karawo textile flower motif. The design is modern, friendly, and geometric, suitable for an educational app for children. The flower is colored in a vibrant, optimistic pink hue with clean outlines, set against a transparent background to overlay on a coordinate grid." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9tuHx9yqSpZjiRpaD1WVTC_5nRJM0cAeF4eBsREUUmcoUIYXx0N2WRmN2SF_YX344zk1m-Ulm0ThI-pncOf7kKll32v0gfyZ1RQHm-iMq7QXgzotW9kDLj9_CH0p1r_FYgbOU5ZLC3fLVysuG8Ti685ed9yvOy92bxc1AITnTM2y8oQBw3bLwp7MebhI2GksO-_AxsrnBHxsnTXeK1fguKvRUC1sH1IOWDJYTREFkq4Ml9CGwHoXRoRg1Kc3uVlSlvkzusnLMGYS0"/>
+<span class="font-label-sm text-label-sm text-on-surface mt-1 bg-white/80 px-1 rounded">A (1, 2)</span>
+</div>
+</div>
+<!-- Input Area -->
+<div class="flex items-center justify-center gap-2 mb-stack-lg">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">Jawabanmu:</span>
+<span class="font-headline-md text-headline-md text-on-surface">(</span>
+<input class="w-12 h-12 text-center font-headline-md text-headline-md text-on-surface bg-surface border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="" type="number"/>
+<span class="font-headline-md text-headline-md text-on-surface">,</span>
+<input class="w-12 h-12 text-center font-headline-md text-headline-md text-on-surface bg-surface border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="" type="number"/>
+<span class="font-headline-md text-headline-md text-on-surface">)</span>
+</div>
+<!-- Action Buttons -->
+<div class="flex justify-between gap-gutter mt-auto">
+<button class="flex-1 py-3 px-4 rounded-full border-2 border-primary text-primary font-label-lg text-label-lg text-center hover:bg-primary-container/20 transition-colors bg-white">
+                Petunjuk
+            </button>
+<button class="flex-1 py-3 px-4 rounded-full bg-tertiary text-on-tertiary font-label-lg text-label-lg text-center shadow-sm hover:bg-tertiary/90 transition-colors">
+                Cek Jawaban
+            </button>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hasil Belajar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#783d01",
+                        "on-primary-fixed-variant": "#55377e",
+                        "primary-fixed-dim": "#d8b9ff",
+                        "background": "#f9f9f9",
+                        "primary": "#61438a",
+                        "on-primary-container": "#f4e6ff",
+                        "on-surface-variant": "#4a454f",
+                        "outline-variant": "#ccc3d1",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffdcc4",
+                        "tertiary-fixed-dim": "#ffb2b6",
+                        "surface": "#f9f9f9",
+                        "inverse-surface": "#2f3131",
+                        "surface-container-high": "#e8e8e8",
+                        "tertiary-container": "#b44350",
+                        "on-tertiary-container": "#ffe5e5",
+                        "surface-container-highest": "#e2e2e2",
+                        "outline": "#7b7580",
+                        "on-tertiary-fixed": "#40000d",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#7a5ba4",
+                        "tertiary-fixed": "#ffdadb",
+                        "surface-container": "#eeeeee",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#6e5098",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#6f3800",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#f0f1f1",
+                        "tertiary": "#942b3a",
+                        "surface-bright": "#f9f9f9",
+                        "on-background": "#1a1c1c",
+                        "secondary-container": "#ffab69",
+                        "primary-fixed": "#eddcff",
+                        "on-surface": "#1a1c1c",
+                        "on-secondary-fixed": "#2f1400",
+                        "inverse-primary": "#d8b9ff",
+                        "surface-dim": "#dadada",
+                        "surface-container-low": "#f3f3f4",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#ffb780",
+                        "on-primary-fixed": "#280450",
+                        "on-tertiary-fixed-variant": "#852030",
+                        "surface-variant": "#e2e2e2",
+                        "secondary": "#8e4e14",
+                        "success": "#34a853",
+                        "star-yellow": "#fbbc04"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "12px",
+                        "stack-lg": "32px",
+                        "gutter": "16px",
+                        "base": "8px",
+                        "stack-md": "20px",
+                        "container-padding": "24px",
+                        "touch": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "display-lg": ["36px", { "lineHeight": "44px", "fontWeight": "800" }],
+                        "headline-lg-mobile": ["22px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center">
+<!-- Mobile Container -->
+<div class="w-full max-w-[400px] min-h-screen bg-surface-container-lowest flex flex-col relative overflow-hidden shadow-2xl">
+<!-- Header -->
+<header class="bg-primary text-on-primary flex justify-between items-center w-full px-container-padding py-stack-md shrink-0">
+<button aria-label="Go Back" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile">Hasil Belajar</h1>
+<button aria-label="Close" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">close</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto px-container-padding py-stack-lg flex flex-col gap-stack-lg">
+<!-- Celebration Section -->
+<section class="flex flex-col items-center gap-stack-sm bg-white p-container-padding rounded-3xl border border-outline-variant/30 shadow-[0_4px_24px_rgba(0,0,0,0.06)] relative overflow-hidden">
+<!-- Decorative pattern background placeholder -->
+<div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, #61438a 1px, transparent 0); background-size: 16px 16px;"></div>
+<div class="flex gap-2 justify-center z-10 mb-2">
+<span class="material-symbols-outlined text-5xl text-star-yellow drop-shadow-md" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-6xl text-star-yellow drop-shadow-md -translate-y-2" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-5xl text-star-yellow drop-shadow-md" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<h2 class="font-display-lg text-display-lg text-primary text-center z-10">Luar Biasa!</h2>
+<div class="flex flex-col items-center z-10 mt-4">
+<p class="font-label-lg text-label-lg text-on-surface-variant uppercase tracking-wider mb-1">Skor Akhir</p>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-[48px] leading-[1] font-extrabold text-on-background">90</span>
+<span class="font-headline-md text-headline-md text-on-surface-variant">/ 100</span>
+</div>
+</div>
+</section>
+<!-- Breakdown List -->
+<section class="flex flex-col gap-3">
+<!-- Translasi -->
+<div class="flex items-center justify-between p-4 bg-white rounded-2xl border border-outline-variant/50 shadow-sm hover:border-primary/30 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-tertiary-container/10 text-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">arrow_right_alt</span>
+</div>
+<span class="font-body-lg text-body-lg font-semibold text-on-background">Translasi</span>
+</div>
+<span class="font-headline-md text-headline-md text-primary">20/20</span>
+</div>
+<!-- Refleksi -->
+<div class="flex items-center justify-between p-4 bg-white rounded-2xl border border-outline-variant/50 shadow-sm hover:border-primary/30 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-secondary-container/20 text-[#d97706] flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">flip</span>
+</div>
+<span class="font-body-lg text-body-lg font-semibold text-on-background">Refleksi</span>
+</div>
+<span class="font-headline-md text-headline-md text-primary">20/20</span>
+</div>
+<!-- Rotasi -->
+<div class="flex items-center justify-between p-4 bg-white rounded-2xl border border-outline-variant/50 shadow-sm hover:border-primary/30 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-[#e0f2fe] text-[#0284c7] flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rotate_right</span>
+</div>
+<span class="font-body-lg text-body-lg font-semibold text-on-background">Rotasi</span>
+</div>
+<span class="font-headline-md text-headline-md text-primary">20/20</span>
+</div>
+<!-- Dilatasi -->
+<div class="flex items-center justify-between p-4 bg-white rounded-2xl border border-outline-variant/50 shadow-sm hover:border-primary/30 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-[#dcfce7] text-[#16a34a] flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">aspect_ratio</span>
+</div>
+<span class="font-body-lg text-body-lg font-semibold text-on-background">Dilatasi</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface-variant">15/20</span>
+</div>
+<!-- Tantangan Akhir -->
+<div class="flex items-center justify-between p-4 bg-white rounded-2xl border border-outline-variant/50 shadow-sm hover:border-primary/30 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+</div>
+<span class="font-body-lg text-body-lg font-semibold text-on-background">Tantangan Akhir</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface-variant">15/20</span>
+</div>
+</section>
+</main>
+<!-- Bottom Actions -->
+<footer class="bg-surface-container-lowest px-container-padding py-stack-md flex gap-gutter border-t border-outline-variant/30 shrink-0 pb-safe">
+<button class="flex-1 h-touch rounded-full border-2 border-primary text-primary font-label-lg text-label-lg flex items-center justify-center bg-white hover:bg-primary/5 active:scale-95 transition-all">
+                Ulangi
+            </button>
+<button class="flex-1 h-touch rounded-full bg-primary text-on-primary font-label-lg text-label-lg flex items-center justify-center shadow-[0_4px_12px_rgba(97,67,138,0.3)] hover:bg-primary/90 active:scale-95 transition-all">
+                Selesai
+            </button>
+</footer>
+</div>
+</body></html>

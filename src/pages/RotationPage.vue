@@ -48,7 +48,7 @@ const subQuestions = [
     fixedMotifs: [
       { x: 2, y: 1, label: 'A(2,1)', faded: true },
     ] as Array<Point & { label: string; faded?: boolean }>,
-    arcGuide: { from: { x: -1, y: 2 }, angleDeg: -180 },  // CW (180°)
+    arcGuide: { from: { x: -1, y: 2 }, angleDeg: 180 },   // CCW (kiri, lanjutan dari sub-Q a)
     xMin: -3, xMax: 4, yMin: -3, yMax: 4,
     hint: "Rotasi 180°: (x,y) → (−x,−y). Jadi A'(−1,2) → (1,−2).",
     voiceover: 'Sekarang seret motif memutar 180° melewati titik pusat O(0,0)!',

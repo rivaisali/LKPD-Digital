@@ -18,9 +18,15 @@ const router = useRouter()
 
 <template>
   <header
-    class="flex items-center justify-between px-4 py-2 shrink-0"
+    class="flex items-center justify-between px-4 py-2 shrink-0 relative overflow-hidden"
     :style="{ backgroundColor: color }"
   >
+    <img
+      src="/images/pattern-card.svg"
+      class="absolute bottom-0 left-0 w-full pointer-events-none select-none"
+      style="height: 22px; object-fit: cover; object-position: left center; opacity: 0.22;"
+      aria-hidden="true"
+    />
     <button
       v-if="showBack"
       class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white active:bg-white/30 transition-colors"

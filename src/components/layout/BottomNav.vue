@@ -17,7 +17,13 @@ function isActive(navRoute: string) {
 </script>
 
 <template>
-  <nav class="bg-surface shrink-0 rounded-t-2xl shadow-[0_-4px_12px_rgba(0,0,0,0.08)] border-t border-outline-variant/20">
+  <nav class="bg-surface shrink-0 rounded-t-2xl shadow-[0_-4px_12px_rgba(0,0,0,0.08)] border-t border-outline-variant/20 relative overflow-hidden">
+    <img
+      src="/images/pattern-card.svg"
+      class="absolute top-0 left-0 w-full pointer-events-none select-none"
+      style="height: 16px; object-fit: cover; object-position: left center; opacity: 0.18;"
+      aria-hidden="true"
+    />
     <div class="flex justify-around items-center h-18 px-2">
       <RouterLink
         v-for="item in navItems"

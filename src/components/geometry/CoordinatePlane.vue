@@ -12,6 +12,7 @@ const props = withDefaults(defineProps<{
   endMotifColor?: string
   motifImageSrc?: string
   endMotifImageSrc?: string
+  endMotifScale?: number
   size?: number
   range?: number
 }>(), {
@@ -21,14 +22,15 @@ const props = withDefaults(defineProps<{
   endMotifColor: '#A78BFA',
   motifImageSrc: '/images/karawo-motif.png',
   endMotifImageSrc: '/images/karawo-motif.png',
+  endMotifScale: 1,
   size: 280,
   range: 5,
 })
 
 const padding = 32
 const cellSize = computed(() => (props.size - padding * 2) / (props.range * 2))
-// Motif is displayed at ~1.8 grid cells wide
 const motifSize = computed(() => Math.round(cellSize.value * 1.85))
+const endMotifSize = computed(() => Math.round(motifSize.value * props.endMotifScale))
 
 function toSvg(p: Point): { cx: number; cy: number } {
   return {
@@ -193,16 +195,16 @@ function labelPos(svg: { cx: number; cy: number }, p: Point) {
       <!-- Shadow behind motif -->
       <circle
         :cx="endSvg.cx" :cy="endSvg.cy"
-        :r="motifSize / 2 + 3"
+        :r="endMotifSize / 2 + 3"
         :fill="endMotifColor" opacity="0.18"
       />
       <!-- Gambar Karawo dengan opacity + tint warna ungu -->
       <image
         :href="endMotifImageSrc"
-        :x="endSvg.cx - motifSize / 2"
-        :y="endSvg.cy - motifSize / 2"
-        :width="motifSize"
-        :height="motifSize"
+        :x="endSvg.cx - endMotifSize / 2"
+        :y="endSvg.cy - endMotifSize / 2"
+        :width="endMotifSize"
+        :height="endMotifSize"
         preserveAspectRatio="xMidYMid meet"
         opacity="0.55"
         filter="url(#tint-purple)"

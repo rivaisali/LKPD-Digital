@@ -29,7 +29,13 @@ onMounted(() => {
 <template>
   <div class="h-full flex flex-col bg-background">
     <!-- Header -->
-    <header class="bg-primary text-on-primary flex justify-between items-center w-full px-6 py-4 shrink-0">
+    <header class="bg-primary text-on-primary flex justify-between items-center w-full px-6 py-4 shrink-0 relative overflow-hidden">
+      <img
+        src="/images/pattern-card.svg"
+        class="absolute bottom-0 left-0 w-full pointer-events-none select-none"
+        style="height: 22px; object-fit: cover; object-position: left center; opacity: 0.22;"
+        aria-hidden="true"
+      />
       <button
         class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
         @click="router.push('/home')"
@@ -51,8 +57,9 @@ onMounted(() => {
     <div class="flex-1 page-scroll hide-scrollbar px-6 py-5 flex flex-col gap-5">
       <!-- Celebration card -->
       <section class="flex flex-col items-center gap-4 bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/30 shadow-[0_4px_24px_rgba(0,0,0,0.06)] relative overflow-hidden">
-        <!-- Dot pattern bg -->
-        <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, #61438a 1px, transparent 0); background-size: 16px 16px;" />
+        <!-- Karawo pattern top & bottom -->
+        <img src="/images/pattern-card.svg" class="absolute top-0 left-0 w-full pointer-events-none select-none" style="height: 28px; object-fit: cover; opacity: 0.18;" aria-hidden="true" />
+        <img src="/images/pattern-card.svg" class="absolute bottom-0 left-0 w-full pointer-events-none select-none" style="height: 28px; object-fit: cover; opacity: 0.18; transform: scaleY(-1);" aria-hidden="true" />
         <!-- Stars -->
         <div class="flex gap-2 justify-center z-10">
           <span

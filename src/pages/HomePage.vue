@@ -14,9 +14,16 @@ const totalScore = computed(() => progressStore.totalScore)
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-background">
+  <div class="h-full flex flex-col bg-background relative overflow-hidden">
+    <img src="/images/karawo.jpeg" class="absolute inset-0 h-60 w-full object-cover pointer-events-none select-none" style="opacity:0.09;" aria-hidden="true" />
     <!-- Header -->
-    <header class="w-full px-6 py-2 flex justify-between items-center bg-surface-container-lowest shrink-0 border-b border-outline-variant/30">
+    <header class="w-full px-6 py-2 flex justify-between items-center bg-surface-container-lowest shrink-0 border-b border-outline-variant/30 relative overflow-hidden">
+      <img
+        src="/images/pattern-card.svg"
+        class="absolute bottom-0 left-0 w-full pointer-events-none select-none"
+        style="height: 18px; object-fit: cover; object-position: left center; opacity: 0.1;"
+        aria-hidden="true"
+      />
       <button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container transition-colors">
         <span class="material-symbols-outlined text-2xl">menu</span>
       </button>
@@ -30,14 +37,19 @@ const totalScore = computed(() => progressStore.totalScore)
     <!-- Scrollable content -->
     <div class="flex-1 page-scroll hide-scrollbar px-6 py-5 flex flex-col gap-8">
       <!-- Welcome Banner -->
-      <div class="bg-surface-container-lowest rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex gap-4 items-center">
+      <div class="bg-surface-container-lowest rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex gap-4 items-center relative overflow-hidden">
+        <img
+          src="/images/pattern-card.svg"
+          class="absolute bottom-0 left-0 w-full pointer-events-none select-none"
+          style="height: 26px; object-fit: cover; object-position: left center; opacity: 0.3;"
+          aria-hidden="true"
+        />
         <div class="flex-1">
           <h1 class="font-display font-bold text-xl text-on-surface mb-1">Halo, {{ studentStore.name }}!</h1>
           <p class="font-body text-sm text-on-surface-variant leading-relaxed">
             Hari ini kita akan belajar transformasi geometri melalui motif karawo. Siap berpetualang?
           </p>
         </div>
-        <!-- Nita avatar -->
         <div class="w-20 h-20 rounded-full overflow-hidden shrink-0 border-4 border-surface-container-high shadow-sm">
           <img src="/images/nita.png" alt="Nita" class="w-full h-full object-cover" />
         </div>
@@ -54,6 +66,12 @@ const totalScore = computed(() => progressStore.totalScore)
             :style="{ backgroundColor: activity.color, boxShadow: `0 4px 12px ${activity.color}50` }"
             @click="router.push(activity.route)"
           >
+            <img
+              src="/images/pattern-card.svg"
+              class="absolute bottom-0 left-0 w-full pointer-events-none select-none"
+              style="height: 30px; object-fit: cover; object-position: left center; opacity: 0.22;"
+              aria-hidden="true"
+            />
             <!-- Completion badge -->
             <div
               v-if="progressStore.progress[activity.id as keyof typeof progressStore.progress]?.status === 'completed'"
@@ -82,10 +100,16 @@ const totalScore = computed(() => progressStore.totalScore)
 
       <!-- Tantangan Akhir -->
       <button
-        class="w-full bg-challenge rounded-2xl p-4 flex items-center justify-center gap-3 text-white active:scale-[0.98] transition-transform shadow-[0_4px_12px_rgba(111,91,157,0.3)]"
+        class="w-full bg-challenge rounded-2xl p-4 flex items-center justify-center gap-3 text-white active:scale-[0.98] transition-transform shadow-[0_4px_12px_rgba(111,91,157,0.3)] relative overflow-hidden"
         :class="progressStore.allActivitiesCompleted ? 'opacity-100' : 'opacity-70'"
         @click="router.push('/challenge')"
       >
+        <img
+          src="/images/pattern-card.svg"
+          class="absolute bottom-0 left-0 w-full pointer-events-none select-none"
+          style="height: 28px; object-fit: cover; object-position: left center; opacity: 0.25;"
+          aria-hidden="true"
+        />
         <span class="material-symbols-outlined text-star-yellow text-3xl" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
         <div class="text-left">
           <span class="block font-display font-bold text-lg leading-tight">Tantangan Akhir</span>

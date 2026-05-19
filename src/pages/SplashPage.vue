@@ -40,13 +40,23 @@ async function mulaiBaruConfirmed() {
 }
 
 const completedCount = () =>
-  ['translation', 'reflection', 'rotation', 'dilation'].filter(
-    (id) => progressStore.progress[id as any]?.status === 'completed',
+  (['translation', 'reflection', 'rotation', 'dilation'] as const).filter(
+    (id) => progressStore.progress[id]?.status === 'completed',
   ).length
 </script>
 
 <template>
-  <div class="h-full flex flex-col items-center justify-center karawo-pattern-bg p-6 text-center relative">
+  <div class="h-full flex flex-col items-center justify-center p-6 text-center relative" style="background-color: #ffffff;">
+
+    <!-- Karawo full-screen pattern background (4 tiled columns) -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none select-none flex" aria-hidden="true">
+      <div
+        v-for="i in 4"
+        :key="i"
+        class="flex-1 h-full"
+        style="background-image: url('/images/pattern.svg'); background-repeat: repeat-y; background-size: 150% auto; opacity: 0.90;"
+      />
+    </div>
 
     <!-- LOADING -->
     <div v-if="screen === 'loading'" class="flex flex-col items-center gap-4">
@@ -63,9 +73,22 @@ const completedCount = () =>
           </div>
           <h1 class="font-display font-extrabold text-3xl text-primary leading-tight">KARAWO</h1>
           <p class="font-body text-sm text-on-surface-variant">Petualangan Transformasi Geometri</p>
+    
         </div>
 
-        <div class="w-full bg-white/90 backdrop-blur-sm rounded-3xl p-5 shadow-lg flex flex-col gap-4">
+        <div class="w-full bg-white/90 backdrop-blur-sm rounded-3xl p-5 shadow-lg flex flex-col gap-4 relative overflow-hidden">
+          <img
+            src="/images/pattern-card.svg"
+            class="absolute top-0 left-0 w-full pointer-events-none select-none"
+            style="height: 26px; object-fit: cover; object-position: left center; opacity: 0.2;"
+            aria-hidden="true"
+          />
+          <img
+            src="/images/pattern-card.svg"
+            class="absolute bottom-0 left-0 w-full pointer-events-none select-none"
+            style="height: 26px; object-fit: cover; object-position: left center; opacity: 0.2; transform: scaleY(-1);"
+            aria-hidden="true"
+          />
           <div>
             <h2 class="font-display font-bold text-lg text-on-surface mb-0.5">Hai! Siapakah kamu?</h2>
             <p class="font-body text-xs text-on-surface-variant">Isi nama dan kelasmu untuk memulai petualangan</p>
@@ -114,14 +137,26 @@ const completedCount = () =>
     <template v-else>
       <div class="w-full max-w-sm flex flex-col items-center gap-5">
         <div class="flex flex-col items-center gap-2">
-          <div class="w-44 h-44 animate-float">
+          <div class="w-60 h-60 animate-float">
             <img src="/splash.png" alt="Karakter Nita" class="w-full h-full object-contain drop-shadow-xl" />
           </div>
           <h1 class="font-display font-extrabold text-3xl text-primary leading-tight">KARAWO</h1>
           <p class="font-body text-xs text-on-surface-variant">Petualangan Transformasi Geometri</p>
         </div>
 
-        <div class="w-full bg-white/90 backdrop-blur-sm rounded-3xl p-5 shadow-lg flex flex-col gap-4">
+        <div class="w-full bg-white/90 backdrop-blur-sm rounded-3xl p-5 shadow-lg flex flex-col gap-4 relative overflow-hidden">
+          <img
+            src="/images/pattern-card.svg"
+            class="absolute top-0 left-0 w-full pointer-events-none select-none"
+            style="height: 26px; object-fit: cover; object-position: left center; opacity: 0.2;"
+            aria-hidden="true"
+          />
+          <img
+            src="/images/pattern-card.svg"
+            class="absolute bottom-0 left-0 w-full pointer-events-none select-none"
+            style="height: 26px; object-fit: cover; object-position: left center; opacity: 0.2; transform: scaleY(-1);"
+            aria-hidden="true"
+          />
           <!-- Info siswa -->
           <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-2xl shrink-0">👧</div>

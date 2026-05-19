@@ -12,6 +12,8 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div class="karawo-side karawo-side--left" aria-hidden="true" />
+  <div class="karawo-side karawo-side--right" aria-hidden="true" />
   <div class="app-shell">
     <RouterView v-slot="{ Component }">
       <Transition name="page" mode="out-in">

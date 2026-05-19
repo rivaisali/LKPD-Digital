@@ -288,6 +288,7 @@ function showHint() {
             :show-arrow="!!previewPoint"
             :motif-color="COLOR"
             :end-motif-color="'#A78BFA'"
+            :end-motif-scale="sliderMoved ? sliderValue : 1"
             :size="270"
             :range="5"
           />

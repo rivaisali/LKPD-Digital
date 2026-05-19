@@ -4,16 +4,16 @@
   --font-display: 'Plus Jakarta Sans', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
 
-  /* Primary - Deep Purple */
-  --color-primary: #61438a;
-  --color-primary-light: #7a5ba4;
-  --color-primary-dark: #55377e;
-  --color-primary-container: #7a5ba4;
+  /* Primary - Karawo Red */
+  --color-primary: #c11a1a;
+  --color-primary-light: #d93a3a;
+  --color-primary-dark: #9e1414;
+  --color-primary-container: #d93a3a;
   --color-on-primary: #ffffff;
-  --color-on-primary-container: #f4e6ff;
-  --color-primary-fixed: #eddcff;
-  --color-primary-fixed-dim: #d8b9ff;
-  --color-inverse-primary: #d8b9ff;
+  --color-on-primary-container: #ffe5e5;
+  --color-primary-fixed: #ffe5e5;
+  --color-primary-fixed-dim: #ffb3b3;
+  --color-inverse-primary: #ffb3b3;
 
   /* Secondary - Orange */
   --color-secondary: #8e4e14;
@@ -83,11 +83,40 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #dadada;
+  background-color: #f0ebe8;
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 #app { height: 100%; }
+
+/* ── Karawo side decorations (desktop only) ─────────────────────────────── */
+.karawo-side {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 148px;
+  background-image: url('/images/pattern.svg');
+  background-repeat: repeat-y;
+  background-size: 148px auto;
+  opacity: 0.22;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.karawo-side--left {
+  /* right edge flush against app-shell left edge: 50vw + half-app-width */
+  right: calc(50vw + 215px);
+}
+
+.karawo-side--right {
+  /* left edge flush against app-shell right edge */
+  left: calc(50vw + 215px);
+}
+
+/* Hide on viewport ≤ 500px (pure mobile — no side space available) */
+@media (max-width: 500px) {
+  .karawo-side { display: none; }
+}
 
 .app-shell {
   max-width: 430px;
@@ -98,6 +127,7 @@ html, body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  z-index: 1;
 }
 
 .page-scroll {
@@ -131,8 +161,8 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 .karawo-pattern-bg {
-  background-color: #f9eff3;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b44350' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-color: #f5ecea;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A81B1B' fill-opacity='0.12'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 .dot-pattern-bg {

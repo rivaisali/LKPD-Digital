@@ -34,7 +34,7 @@ const totalScore = computed(() => progressStore.totalScore)
     </header>
 
     <!-- Scrollable content -->
-    <div class="flex-1 page-scroll hide-scrollbar px-6 py-5 flex flex-col gap-8">
+    <div class="flex-1 min-h-0 page-scroll hide-scrollbar px-6 py-5 space-y-8">
       <!-- Welcome Banner -->
       <div class="bg-surface-container-lowest rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex gap-4 items-center relative overflow-hidden">
         <img

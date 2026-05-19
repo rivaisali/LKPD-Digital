@@ -4,17 +4,21 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const page = ref(0)
+const slideDir = ref<'left' | 'right'>('left')
 
 const pages = [
   {
+    image: '/images/cerita1.jpg',
     text: 'Nita membantu ibunya menyulam kain karawo. Ia memperhatikan bahwa motif-motif pada kain memiliki pola pergerakan tertentu.',
     callout: 'Ayo bantu Nita memahami rahasia di balik keindahan motif karawo!',
   },
   {
+    image: '/images/cerita2.webp',
     text: '"Bu, kenapa motif ini seperti bergeser ke kanan?" tanya Nita sambil menunjuk pola bunga pada kain karawo.',
     callout: 'Ibunya tersenyum, "Itu namanya translasi, Nita. Motifnya berpindah tanpa berubah bentuk!"',
   },
   {
+    image: '/images/cerita3.jpeg',
     text: '"Hebat sekali, Bu!" seru Nita dengan penuh semangat.',
     callout: 'Motif Karawo menyimpan banyak rahasia matematika — translasi, refleksi, rotasi, dan dilatasi. Yuk, kita pelajari bersama-sama!',
   },
@@ -22,9 +26,17 @@ const pages = [
 
 function nextPage() {
   if (page.value < pages.length - 1) {
+    slideDir.value = 'left'
     page.value++
   } else {
     router.push('/home')
+  }
+}
+
+function prevPage() {
+  if (page.value > 0) {
+    slideDir.value = 'right'
+    page.value--
   }
 }
 </script>
@@ -49,7 +61,16 @@ function nextPage() {
     <div class="flex-1 page-scroll hide-scrollbar flex flex-col px-6 py-5 gap-5 pb-28">
       <!-- Illustration card -->
       <div class="w-full rounded-2xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.1)] border border-surface-variant bg-surface-container-lowest">
-        <StoryIllustration :page="page" />
+        <div class="relative w-full overflow-hidden" style="height: 220px;">
+          <Transition :name="slideDir === 'left' ? 'slide-left' : 'slide-right'" mode="out-in">
+            <img
+              :key="page"
+              :src="pages[page].image"
+              :alt="`Cerita halaman ${page + 1}`"
+              class="w-full h-full object-cover absolute inset-0"
+            />
+          </Transition>
+        </div>
         <!-- Page dots -->
         <div class="flex justify-center gap-2 py-3">
           <div
@@ -82,7 +103,7 @@ function nextPage() {
         <button
           v-if="page > 0"
           class="flex-1 border-2 border-primary text-primary py-4 rounded-2xl font-display font-semibold text-sm active:scale-95 transition-transform"
-          @click="page--"
+          @click="prevPage"
         >Sebelumnya</button>
         <button
           class="flex-1 bg-primary text-on-primary py-4 rounded-2xl font-display font-semibold text-sm shadow-sm active:scale-95 transition-transform flex items-center justify-center gap-2"
@@ -96,76 +117,15 @@ function nextPage() {
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, h } from 'vue'
-
-const StoryIllustration = defineComponent({
-  props: { page: { type: Number, default: 0 } },
-  setup(props) {
-    return () => {
-      const bgColors = ['#f4e6ff', '#fff0dd', '#fde8ef']
-      const bg = bgColors[props.page] ?? '#f4e6ff'
-      return h('svg', { viewBox: '0 0 430 240', class: 'w-full', style: 'height: 200px' }, [
-        h('rect', { width: 430, height: 240, fill: bg }),
-        // Karawo pattern overlay
-        h('g', { opacity: 0.15 }, [
-          ...Array.from({ length: 6 }, (_, i) =>
-            h('rect', {
-              key: `r${i}`,
-              x: i * 72 + 10,
-              y: 10,
-              width: 52,
-              height: 52,
-              rx: 4,
-              fill: '#61438a',
-            })
-          ),
-          ...Array.from({ length: 6 }, (_, i) =>
-            h('rect', {
-              key: `r2${i}`,
-              x: i * 72 + 36,
-              y: 110,
-              width: 52,
-              height: 52,
-              rx: 4,
-              fill: '#61438a',
-            })
-          ),
-        ]),
-        // Nita figure
-        h('g', { transform: 'translate(90, 30)' }, [
-          h('ellipse', { cx: 55, cy: 62, rx: 26, ry: 30, fill: '#FDDCB5' }),
-          h('ellipse', { cx: 55, cy: 40, rx: 28, ry: 20, fill: '#61438a' }),
-          h('ellipse', { cx: 55, cy: 102, rx: 30, ry: 24, fill: '#61438a' }),
-          h('circle', { cx: 45, cy: 60, r: 4, fill: '#1F2937' }),
-          h('circle', { cx: 65, cy: 60, r: 4, fill: '#1F2937' }),
-          h('path', { d: 'M47 74 Q55 82 63 74', stroke: '#c0392b', 'stroke-width': 2.5, fill: 'none', 'stroke-linecap': 'round' }),
-          h('ellipse', { cx: 38, cy: 58, rx: 5, ry: 4, fill: '#F9A8D4', opacity: 0.6 }),
-          h('ellipse', { cx: 72, cy: 58, rx: 5, ry: 4, fill: '#F9A8D4', opacity: 0.6 }),
-        ]),
-        // Mother figure
-        h('g', { transform: 'translate(220, 20)' }, [
-          h('ellipse', { cx: 55, cy: 68, rx: 28, ry: 33, fill: '#D6B896' }),
-          h('ellipse', { cx: 55, cy: 42, rx: 30, ry: 22, fill: '#4a454f' }),
-          h('ellipse', { cx: 55, cy: 110, rx: 33, ry: 28, fill: '#ec6585' }),
-          h('circle', { cx: 45, cy: 62, r: 4, fill: '#1F2937' }),
-          h('circle', { cx: 65, cy: 62, r: 4, fill: '#1F2937' }),
-          h('path', { d: 'M47 78 Q55 86 63 78', stroke: '#4a454f', 'stroke-width': 2, fill: 'none', 'stroke-linecap': 'round' }),
-        ]),
-        // Karawo fabric
-        h('rect', { x: 140, y: 155, width: 150, height: 55, rx: 6, fill: '#ffe5e5', stroke: '#ec6585', 'stroke-width': 1.5 }),
-        h('g', { opacity: 0.6 }, [
-          ...Array.from({ length: 4 }, (_, i) =>
-            h('circle', { key: i, cx: 160 + i * 34, cy: 176, r: 8, fill: '#61438a' })
-          ),
-          ...Array.from({ length: 3 }, (_, i) =>
-            h('circle', { key: `b${i}`, cx: 177 + i * 34, cy: 194, r: 8, fill: '#f79624', opacity: 0.8 })
-          ),
-        ]),
-      ])
-    }
-  },
-})
-
-export { StoryIllustration }
-</script>
+<style scoped>
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.slide-left-enter-from  { transform: translateX(100%); opacity: 0; }
+.slide-left-leave-to    { transform: translateX(-100%); opacity: 0; }
+.slide-right-enter-from { transform: translateX(-100%); opacity: 0; }
+.slide-right-leave-to   { transform: translateX(100%); opacity: 0; }
+</style>

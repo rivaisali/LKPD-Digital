@@ -69,7 +69,7 @@ const completedCount = () =>
       <div class="w-full max-w-sm flex flex-col items-center gap-6">
         <div class="flex flex-col items-center gap-2">
           <div class="w-52 h-52 animate-float">
-            <img src="/splash.png" alt="Karakter Nita" class="w-full h-full object-contain drop-shadow-xl" />
+            <img src="/splash2.png" alt="Karakter Nita" class="w-full h-full object-contain drop-shadow-xl" />
           </div>
           <h1 class="font-display font-extrabold text-3xl text-primary leading-tight">KARAWO</h1>
           <p class="font-body text-sm text-on-surface-variant">Petualangan Transformasi Geometri</p>
@@ -138,7 +138,7 @@ const completedCount = () =>
       <div class="w-full max-w-sm flex flex-col items-center gap-5">
         <div class="flex flex-col items-center gap-2">
           <div class="w-60 h-60 animate-float">
-            <img src="/splash.png" alt="Karakter Nita" class="w-full h-full object-contain drop-shadow-xl" />
+            <img src="/splash2.png" alt="Karakter Nita" class="w-full h-full object-contain drop-shadow-xl" />
           </div>
           <h1 class="font-display font-extrabold text-3xl text-primary leading-tight">KARAWO</h1>
           <p class="font-body text-xs text-on-surface-variant">Petualangan Transformasi Geometri</p>

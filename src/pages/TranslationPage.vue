@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import TopBar from '@/components/layout/TopBar.vue'
 import ProgressDots from '@/components/ui/ProgressDots.vue'
@@ -9,7 +9,7 @@ import CoordinateInput from '@/components/ui/CoordinateInput.vue'
 import { isSamePoint } from '@/domain/geometry'
 import { calculateScore } from '@/domain/scoring'
 import { useProgressStore } from '@/stores/useProgressStore'
-import { saveAnswer } from '@/db/db'
+import { saveAnswer, getCorrectAnswers } from '@/db/db'
 import type { Point } from '@/domain/types'
 
 const router = useRouter()
@@ -123,6 +123,19 @@ const draggablePos = computed(() => {
 })
 
 progressStore.setActivityInProgress('translation')
+
+onMounted(async () => {
+  const correct = await getCorrectAnswers('translation')
+  if (correct.length === 0) return
+  const correctIds = new Set(correct.map((a) => a.questionId))
+  // Pulihkan skor dari sesi sebelumnya
+  for (const a of correct) {
+    activityScore.value += calculateScore(a.attempts, a.usedHint)
+  }
+  // Lompat ke sub-soal pertama yang belum terjawab benar
+  const first = subQuestions.findIndex((q) => !correctIds.has(q.id))
+  currentIdx.value = first === -1 ? subQuestions.length - 1 : first
+})
 
 // ── Handler drag: hanya isi input, belum cek jawaban ─────────────────────────
 function onDrop(point: Point) {

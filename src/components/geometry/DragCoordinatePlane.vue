@@ -13,6 +13,8 @@ const props = withDefaults(defineProps<{
   motifColor?: string
   motifImageSrc?: string
   disabled?: boolean
+  // Arc guide: draws a curved arrow from `from` sweeping `angleDeg` degrees (positive = CCW)
+  arcGuide?: { from: Point; angleDeg: number; color?: string }
 }>(), {
   xMin: 0, xMax: 8,
   yMin: 0, yMax: 7,
@@ -111,6 +113,38 @@ function onPointerUp(e: PointerEvent) {
 const draggableSvg = computed(() => props.draggable ? toSvg(props.draggable) : null)
 const snapSvg      = computed(() => snapPoint.value ? toSvg(snapPoint.value) : null)
 
+// ── Rotation arc guide ────────────────────────────────────────────────────────
+const arcGuidePath = computed(() => {
+  if (!props.arcGuide) return null
+  const { from, angleDeg, color = '#888' } = props.arcGuide
+  const r = Math.sqrt(from.x ** 2 + from.y ** 2)
+  if (r === 0) return null
+  const startAngle = Math.atan2(from.y, from.x)
+  const sweepRad = (angleDeg * Math.PI) / 180
+  const n = 16
+  const pts: { cx: number; cy: number }[] = []
+  for (let i = 0; i <= n; i++) {
+    const a = startAngle + (i / n) * sweepRad
+    pts.push(toSvg({ x: r * Math.cos(a), y: r * Math.sin(a) }))
+  }
+  // Build arrowhead at the end point pointing along the arc tangent
+  const last = pts[pts.length - 1]
+  const prev = pts[pts.length - 2]
+  const dx = last.cx - prev.cx
+  const dy = last.cy - prev.cy
+  const len = Math.sqrt(dx * dx + dy * dy) || 1
+  const nx = dx / len; const ny = dy / len
+  const pw = 5; const pl = 9
+  const arrow = [
+    { cx: last.cx + pl * nx + pw * (-ny), cy: last.cy + pl * ny + pw * nx },
+    { cx: last.cx, cy: last.cy },
+    { cx: last.cx + pl * nx - pw * (-ny), cy: last.cy + pl * ny - pw * nx },
+  ]
+  const polyline = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.cx} ${p.cy}`).join(' ')
+  const arrowStr = arrow.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.cx} ${p.cy}`).join(' ')
+  return { polyline, arrowStr, color }
+})
+
 // Label position: flip anchor if motif is close to right edge
 function labelPos(cx: number) {
   const flip = cx > props.size - 60
@@ -171,6 +205,14 @@ function labelPos(cx: number) {
       <polygon :points="`${originSvg.cx-3},${padding-4} ${originSvg.cx},${padding-12} ${originSvg.cx+3},${padding-4}`" fill="#374151"/>
       <text :x="originSvg.cx-4" :y="padding-15" font-size="11" fill="#374151" font-family="Nunito" font-weight="700">Y</text>
     </template>
+
+    <!-- ── Rotation arc guide ── -->
+    <g v-if="arcGuidePath">
+      <path :d="arcGuidePath.polyline" fill="none" :stroke="arcGuidePath.color"
+            stroke-width="2" stroke-dasharray="6,3" opacity="0.7" />
+      <path :d="arcGuidePath.arrowStr" fill="none" :stroke="arcGuidePath.color"
+            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85" />
+    </g>
 
     <!-- ── Fixed (history) motifs ── -->
     <g v-for="(fm, i) in fixedMotifs" :key="`fm${i}`" :opacity="fm.faded ? 0.45 : 1">

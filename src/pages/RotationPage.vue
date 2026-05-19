@@ -1,144 +1,168 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import TopBar from '@/components/layout/TopBar.vue'
 import ProgressDots from '@/components/ui/ProgressDots.vue'
 import FeedbackModal from '@/components/ui/FeedbackModal.vue'
-import CoordinatePlane from '@/components/geometry/CoordinatePlane.vue'
+import DragCoordinatePlane from '@/components/geometry/DragCoordinatePlane.vue'
 import CoordinateInput from '@/components/ui/CoordinateInput.vue'
-import { rotationActivity } from '@/data/lkpd-activities'
-import { isSamePoint, rotatePoint } from '@/domain/geometry'
+import { isSamePoint } from '@/domain/geometry'
 import { calculateScore } from '@/domain/scoring'
 import { useProgressStore } from '@/stores/useProgressStore'
-import { saveAnswer } from '@/db/db'
-import type { RotationAngle, RotationDirection } from '@/domain/types'
+import { saveAnswer, getCorrectAnswers } from '@/db/db'
+import type { Point } from '@/domain/types'
 
 const router = useRouter()
 const progressStore = useProgressStore()
-const COLOR = '#3B82F6'
+const COLOR = '#3d91cf'
 
-// Soal a: (2,1) putar 90° CCW → (-1,2)
-// Soal b: dari (-1,2) putar 180° → (1,-2)
-const STEPS: { start: { label: string; x: number; y: number }; angle: RotationAngle; direction: RotationDirection }[] = [
-  { start: { label: 'A', x: 2, y: 1 }, angle: 90, direction: 'ccw' },
-  { start: { label: "A'", x: -1, y: 2 }, angle: 180, direction: 'ccw' },
+const dragSteps = [
+  { label: 'a', text: 'Seret motif berlawanan arah jarum jam sebesar 90° → ke titik (−1,2)' },
+  { label: 'b', text: 'Seret motif searah jarum jam sebesar 180° melewati pusat → ke titik (1,−2)' },
 ]
 
-const currentIdx = ref(0)
-const answerX = ref('')
-const answerY = ref('')
-const attempts = ref(0)
-const usedHint = ref(false)
-const hintIndex = ref(-1)
-const showFeedback = ref(false)
+// Sub-Q a: A(2,1) → rotate 90° CCW → A'(-1,2)
+// Sub-Q b: A'(-1,2) → rotate 180° CW → A''(1,-2)
+const subQuestions = [
+  {
+    id: 'rot-a',
+    label: 'a',
+    activeDragStep: 0,
+    question: 'a. Berapa titik koordinat posisi motif setelah dirotasi 90°?',
+    target: { x: -1, y: 2 } as Point,
+    draggable: { x: 2, y: 1, label: 'A' },
+    fixedMotifs: [] as Array<Point & { label: string; faded?: boolean }>,
+    arcGuide: { from: { x: 2, y: 1 }, angleDeg: 90 },  // CCW
+    xMin: -3, xMax: 4, yMin: -1, yMax: 4,
+    hint: 'Rotasi 90° berlawanan jarum jam: (x,y) → (−y, x). Jadi A(2,1) → (−1, 2).',
+    voiceover: 'Seret motif mengikuti arah panah, berlawanan arah jarum jam sebesar 90°!',
+    ruleLabel: '90° CCW: (x,y) → (−y, x)',
+  },
+  {
+    id: 'rot-b',
+    label: 'b',
+    activeDragStep: 1,
+    question: "b. Jika dilanjutkan dengan rotasi 180°, berapa titik koordinat posisi motif?",
+    target: { x: 1, y: -2 } as Point,
+    draggable: { x: -1, y: 2, label: "A'" },
+    fixedMotifs: [
+      { x: 2, y: 1, label: 'A(2,1)', faded: true },
+    ] as Array<Point & { label: string; faded?: boolean }>,
+    arcGuide: { from: { x: -1, y: 2 }, angleDeg: -180 },  // CW (180°)
+    xMin: -3, xMax: 4, yMin: -3, yMax: 4,
+    hint: "Rotasi 180°: (x,y) → (−x,−y). Jadi A'(−1,2) → (1,−2).",
+    voiceover: 'Sekarang seret motif memutar 180° melewati titik pusat O(0,0)!',
+    ruleLabel: '180°: (x,y) → (−x, −y)',
+  },
+]
+
+const currentIdx      = ref(0)
+const answerX         = ref('')
+const answerY         = ref('')
+const attempts        = ref(0)
+const usedHint        = ref(false)
+const showHintBox     = ref(false)
+const showFeedback    = ref(false)
 const feedbackCorrect = ref(false)
 const feedbackMessage = ref('')
-const activityScore = ref(0)
-const isFinished = ref(false)
-const selectedAngle = ref<RotationAngle | null>(null)
+const feedbackFromPoint = ref<{ label: string; x: number; y: number } | undefined>()
+const feedbackToPoint   = ref<{ label: string; x: number; y: number } | undefined>()
+const activityScore   = ref(0)
+const isFinished      = ref(false)
+const dragLocked      = ref(false)
+const droppedPos      = ref<Point | null>(null)
 
-const currentQ = computed(() => rotationActivity.subQuestions[currentIdx.value])
-const totalQ = computed(() => rotationActivity.subQuestions.length)
-const currentStep = computed(() => STEPS[currentIdx.value])
+const currentQ   = computed(() => subQuestions[currentIdx.value])
+const totalQ     = computed(() => subQuestions.length)
+const hasDragged = computed(() => droppedPos.value !== null)
 
-const endPoint = computed(() => {
-  if (!feedbackCorrect.value || !showFeedback.value) return undefined
-  const result = rotatePoint(currentStep.value.start, currentStep.value.angle, currentStep.value.direction)
-  return { ...result, label: currentStep.value.start.label + "'" }
+const draggablePos = computed(() => {
+  if (!currentQ.value.draggable) return null
+  if (dragLocked.value) return { ...currentQ.value.target, label: currentQ.value.draggable.label }
+  if (droppedPos.value) return { ...droppedPos.value, label: currentQ.value.draggable.label }
+  return currentQ.value.draggable
 })
-
-const previewPoint = computed(() => {
-  if (!selectedAngle.value) return undefined
-  const result = rotatePoint(currentStep.value.start, selectedAngle.value, currentStep.value.direction)
-  return { ...result, label: currentStep.value.start.label + "'" }
-})
-
-const angleOptions: { val: RotationAngle; label: string }[] = [
-  { val: 90, label: '90°' },
-  { val: 180, label: '180°' },
-  { val: 270, label: '270°' },
-]
 
 progressStore.setActivityInProgress('rotation')
 
-function selectAngle(a: RotationAngle) {
-  selectedAngle.value = a
+onMounted(async () => {
+  const correct = await getCorrectAnswers('rotation')
+  if (correct.length === 0) return
+  const correctIds = new Set(correct.map((a) => a.questionId))
+  for (const a of correct) activityScore.value += calculateScore(a.attempts, a.usedHint)
+  const first = subQuestions.findIndex((q) => !correctIds.has(q.id))
+  currentIdx.value = first === -1 ? subQuestions.length - 1 : first
+})
+
+function onDrop(point: Point) {
+  if (dragLocked.value) return
+  droppedPos.value = point
+  answerX.value    = String(point.x)
+  answerY.value    = String(point.y)
 }
 
-function checkAnswer() {
-  const q = currentQ.value
-  if (q.isText) return
+function checkDrag() {
   const x = parseFloat(answerX.value)
   const y = parseFloat(answerY.value)
   if (isNaN(x) || isNaN(y)) return
 
   attempts.value++
-  const correct = isSamePoint({ x, y }, q.correctAnswer)
+  const correct = isSamePoint({ x, y }, currentQ.value.target)
 
   if (correct) {
     const score = calculateScore(attempts.value, usedHint.value)
     activityScore.value += score
     feedbackCorrect.value = true
-    feedbackMessage.value = currentIdx.value === totalQ.value - 1
-      ? rotationActivity.conceptFeedback + '\n\n' + rotationActivity.conceptRule
-      : `Benar! Setelah dirotasi ${currentStep.value.angle}°, motif berpindah ke (${x}, ${y}).`
+    dragLocked.value      = true
+    const startLabel = currentQ.value.draggable!.label
+    const startPt    = currentQ.value.draggable!
+    feedbackMessage.value   = `Jawabanmu benar! Motif berpindah dari ${startLabel}(${startPt.x},${startPt.y}) ke (${x},${y}).`
+    feedbackFromPoint.value = { label: `${startLabel}(${startPt.x},${startPt.y})`, x: startPt.x, y: startPt.y }
+    feedbackToPoint.value   = { label: `${startLabel}'(${x},${y})`, x, y }
     saveAnswer({
-      activityId: 'rotation',
-      questionId: q.id,
+      activityId: 'rotation', questionId: currentQ.value.id,
       answerX: x, answerY: y,
       isCorrect: true, attempts: attempts.value, usedHint: usedHint.value,
       createdAt: new Date().toISOString(),
     })
   } else {
-    feedbackCorrect.value = false
-    const hints0 = [
-      'Rotasi 90° berlawanan jarum jam: (x, y) → (−y, x).',
-      `Titik (${currentStep.value.start.x}, ${currentStep.value.start.y}) → (−${currentStep.value.start.y}, ${currentStep.value.start.x}) = (${q.correctAnswer.x}, ${q.correctAnswer.y}).`,
-    ]
-    const hints1 = [
-      'Rotasi 180°: (x, y) → (−x, −y).',
-      `Titik (${currentStep.value.start.x}, ${currentStep.value.start.y}) → (${q.correctAnswer.x}, ${q.correctAnswer.y}).`,
-    ]
-    const hints = currentIdx.value === 0 ? hints0 : hints1
-    feedbackMessage.value = attempts.value >= 2
-      ? `Jawaban yang benar adalah (${q.correctAnswer.x}, ${q.correctAnswer.y}).`
-      : hints[Math.min(attempts.value - 1, hints.length - 1)]
+    feedbackFromPoint.value = undefined
+    feedbackToPoint.value   = undefined
+    feedbackCorrect.value   = false
+    feedbackMessage.value   = attempts.value >= 2
+      ? `Belum tepat. Jawaban yang benar adalah (${currentQ.value.target.x},${currentQ.value.target.y}). ${currentQ.value.hint}`
+      : 'Belum tepat! Ikuti arah panah putaran, lalu seret ke posisi yang benar.'
   }
   showFeedback.value = true
 }
 
 function onFeedbackNext() {
   showFeedback.value = false
-  if (feedbackCorrect.value || attempts.value >= 3) {
+  if (feedbackCorrect.value || attempts.value >= 2) {
+    dragLocked.value        = false
+    droppedPos.value        = null
+    feedbackFromPoint.value = undefined
+    feedbackToPoint.value   = undefined
     if (currentIdx.value < totalQ.value - 1) {
       currentIdx.value++
-      answerX.value = ''
-      answerY.value = ''
-      attempts.value = 0
-      usedHint.value = false
-      hintIndex.value = -1
-      selectedAngle.value = null
+      answerX.value     = ''
+      answerY.value     = ''
+      attempts.value    = 0
+      usedHint.value    = false
+      showHintBox.value = false
     } else {
       progressStore.setActivityScore('rotation', activityScore.value, attempts.value)
       isFinished.value = true
     }
+  } else {
+    dragLocked.value = false
   }
 }
 
 function showHint() {
-  usedHint.value = true
-  hintIndex.value = Math.min(hintIndex.value + 1, 1)
+  usedHint.value    = true
+  showHintBox.value = true
 }
-
-const hintText = computed(() => {
-  if (hintIndex.value < 0) return ''
-  const q = currentQ.value
-  if (q.isText) return ''
-  const hints = currentIdx.value === 0
-    ? ['Rotasi 90° berlawanan jarum jam: (x, y) → (−y, x).', "Ubah x menjadi −y dan y menjadi x. Titik (2,1) → (−1, 2)."]
-    : ['Rotasi 180°: (x, y) → (−x, −y).', "Balikkan tanda kedua koordinat. (−1,2) → (1, −2)."]
-  return hints[hintIndex.value] ?? ''
-})
 </script>
 
 <template>
@@ -149,119 +173,149 @@ const hintText = computed(() => {
       <ProgressDots :total="totalQ" :current="currentIdx" :color="COLOR" />
     </div>
 
-    <div v-if="!isFinished" class="flex-1 page-scroll hide-scrollbar px-4">
+    <div v-if="!isFinished" class="flex-1 page-scroll hide-scrollbar px-4 pb-4">
 
-      <!-- Stimulus hanya soal pertama -->
-      <div v-if="currentIdx === 0" class="mb-3">
+      <!-- Stimulus / Cerita -->
+      <div class="mb-3 mt-1">
         <div class="flex items-center gap-2 mb-2">
-          <div class="w-1.5 h-6 rounded-full" :style="{ backgroundColor: COLOR }" />
-          <h2 class="font-display font-bold text-gray-700 text-base">{{ rotationActivity.stimulusTitle }}</h2>
+          <div class="w-1.5 h-5 rounded-full" :style="{ backgroundColor: COLOR }" />
+          <h2 class="font-display font-bold text-gray-700 text-sm">Cerita</h2>
         </div>
-        <div class="bg-blue-50 rounded-2xl p-4 border border-blue-100">
-          <p
-            v-for="(para, i) in rotationActivity.stimulusText.split('\n\n')"
-            :key="i"
-            class="font-body text-gray-700 text-sm leading-relaxed"
-            :class="{ 'mt-2': i > 0 }"
-          >{{ para }}</p>
+        <div class="rounded-2xl p-4 border text-sm leading-relaxed font-body text-gray-700"
+             :style="{ backgroundColor: COLOR + '10', borderColor: COLOR + '30' }">
+          Ibu Nita membuat pola berbentuk bunga yang melingkar. Pola bunga tersebut berada di titik
+          <strong>(2,1)</strong>. Kemudian ia membuat satu motif lagi dengan memutar motif
+          <strong>berlawanan arah jarum jam sebesar 90°</strong> terhadap titik pusat (0,0).
+          <br /><br />
+          Setelah beberapa menit, Ibu Nita melanjutkan lagi dengan memutar motif
+          <strong>searah jarum jam sebesar 180°</strong>. Nita sangat terkesan melihat pola karawo yang terbentuk.
         </div>
       </div>
 
-      <!-- Voice over Nita -->
-      <div class="flex items-start gap-3 mb-3">
-        <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center shrink-0 text-lg">👧</div>
-        <div class="bg-blue-50 rounded-2xl rounded-tl-none p-3 flex-1">
-          <p class="font-body text-blue-700 text-xs leading-snug italic">
-            "{{ currentIdx === 0 ? rotationActivity.voiceoverIntro : 'Hebat! Sekarang dari posisi hasil rotasi tadi, dilanjutkan rotasi 180°.' }}"
-          </p>
-        </div>
-      </div>
-
-      <!-- Sub-question -->
-      <div class="bg-white rounded-3xl p-4 mb-3 shadow-sm border border-blue-50">
-        <div class="flex items-center gap-2 mb-2">
-          <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white" :style="{ backgroundColor: COLOR }">
-            {{ String.fromCharCode(97 + currentIdx) }}
+      <!-- Daftar Instruksi Drag -->
+      <div class="bg-white rounded-2xl p-4 mb-3 shadow-sm border border-gray-100">
+        <p class="font-display font-semibold text-gray-500 text-xs mb-2 uppercase tracking-wide">Instruksi — Drag &amp; Drop</p>
+        <div class="space-y-2">
+          <div
+            v-for="(step, i) in dragSteps"
+            :key="step.label"
+            class="flex items-start gap-3 rounded-xl px-3 py-2 transition-colors"
+            :class="{
+              'bg-gray-50 opacity-60': i < currentIdx,
+              'opacity-40': i > currentQ.activeDragStep,
+            }"
+          >
+            <div
+              class="w-5 h-5 rounded-full shrink-0 mt-0.5 flex items-center justify-center text-[10px] font-bold"
+              :class="i < currentIdx ? 'bg-green-500 text-white' : 'text-white'"
+              :style="i >= currentIdx && i === currentQ.activeDragStep ? { backgroundColor: COLOR } : i < currentIdx ? {} : { backgroundColor: '#D1D5DB' }"
+            >
+              <span v-if="i < currentIdx">✓</span>
+              <span v-else>{{ step.label }}</span>
+            </div>
+            <p class="font-body text-xs leading-relaxed"
+               :class="i === currentQ.activeDragStep ? 'text-gray-800 font-semibold' : 'text-gray-500'">
+              {{ step.text }}
+            </p>
           </div>
-          <span class="font-display font-semibold text-gray-600 text-xs uppercase tracking-wide">
-            Rotasi {{ currentStep.angle }}° {{ currentStep.direction === 'ccw' ? 'Berlawanan Jarum Jam' : 'Searah Jarum Jam' }}
-          </span>
         </div>
-        <p class="font-body text-gray-700 text-sm leading-relaxed">{{ currentQ.instruction }}</p>
+      </div>
 
-        <!-- Info titik awal -->
-        <div class="mt-2 flex items-center gap-2 bg-blue-50 rounded-xl px-3 py-2">
-          <div class="w-2 h-2 rounded-full" :style="{ backgroundColor: COLOR }" />
-          <span class="font-display font-semibold text-blue-700 text-xs">
-            Titik awal: {{ currentStep.start.label }}({{ currentStep.start.x }}, {{ currentStep.start.y }})
-          </span>
+      <!-- Nita voiceover -->
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-lg"
+             :style="{ backgroundColor: COLOR + '20' }">👧</div>
+        <div class="rounded-2xl rounded-tl-none p-3 flex-1" :style="{ backgroundColor: COLOR + '10' }">
+          <p class="font-body text-xs leading-snug italic" :style="{ color: COLOR }">
+            "{{ currentQ.voiceover }}"
+          </p>
         </div>
       </div>
 
       <!-- Hint -->
       <Transition name="slide-fade">
-        <div v-if="hintIndex >= 0 && hintText" class="bg-yellow-50 border border-yellow-200 rounded-2xl p-3 mb-3 flex gap-2">
+        <div v-if="showHintBox" class="bg-yellow-50 border border-yellow-200 rounded-2xl p-3 mb-3 flex gap-2">
           <span class="shrink-0">💡</span>
-          <p class="font-body text-yellow-800 text-xs leading-snug">{{ hintText }}</p>
+          <p class="font-body text-yellow-800 text-xs leading-snug">{{ currentQ.hint }}</p>
         </div>
       </Transition>
 
-      <!-- Tombol sudut putar -->
-      <div class="mb-3">
-        <p class="font-body text-gray-500 text-xs mb-2 text-center">Tekan tombol sudut putar dan amati perubahannya!</p>
-        <div class="flex gap-2">
-          <button
-            v-for="opt in angleOptions"
-            :key="opt.val"
-            class="flex-1 py-3 rounded-xl font-display font-semibold text-sm transition-all active:scale-95"
-            :style="{
-              backgroundColor: selectedAngle === opt.val ? COLOR : 'white',
-              color: selectedAngle === opt.val ? 'white' : COLOR,
-              border: `2px solid ${COLOR}`,
-              opacity: currentIdx === 0 && opt.val !== 90 ? '0.4' : currentIdx === 1 && opt.val !== 180 ? '0.4' : '1'
-            }"
-            @click="selectAngle(opt.val)"
-          >{{ opt.label }}</button>
-        </div>
-      </div>
-
-      <!-- Bidang Kartesius -->
-      <div class="flex justify-center mb-3">
-        <CoordinatePlane
-          :start-point="currentStep.start"
-          :end-point="endPoint ?? previewPoint"
-          :show-arrow="!!(endPoint ?? previewPoint)"
+      <!-- Grid Kartesius -->
+      <div class="flex justify-center mb-3 bg-white rounded-3xl p-3 shadow-sm border border-gray-100">
+        <DragCoordinatePlane
+          :fixed-motifs="currentQ.fixedMotifs"
+          :draggable="draggablePos"
+          :x-min="currentQ.xMin"
+          :x-max="currentQ.xMax"
+          :y-min="currentQ.yMin"
+          :y-max="currentQ.yMax"
+          :size="264"
           :motif-color="COLOR"
-          :end-motif-color="'#A78BFA'"
-          :size="285"
+          :disabled="dragLocked"
+          :arc-guide="{ ...currentQ.arcGuide, color: COLOR }"
+          @drop="onDrop"
         />
       </div>
 
-      <!-- Input jawaban -->
-      <div class="bg-white rounded-2xl p-4 mb-4 shadow-sm">
+      <!-- Info aturan rotasi -->
+      <div class="flex justify-center mb-3">
+        <div class="bg-white rounded-2xl px-4 py-2 shadow-sm border border-gray-100 flex items-center gap-2">
+          <span class="font-body text-gray-500 text-xs">Aturan rotasi:</span>
+          <span class="font-display font-bold text-sm" :style="{ color: COLOR }">{{ currentQ.ruleLabel }}</span>
+        </div>
+      </div>
+
+      <!-- Pertanyaan + input koordinat -->
+      <div class="bg-white rounded-2xl p-4 mb-3 shadow-sm border border-gray-100">
+        <p class="font-display font-semibold text-gray-700 text-sm mb-3 leading-snug">{{ currentQ.question }}</p>
+        <p class="font-body text-gray-400 text-xs mb-3">
+          {{ hasDragged ? 'Koordinat hasil seretanmu — periksa sebelum menekan Cek Jawaban:' : 'Seret motif mengikuti panah, lalu jawab di sini.' }}
+        </p>
         <CoordinateInput v-model:x="answerX" v-model:y="answerY" :color="COLOR" />
       </div>
 
-      <div class="flex gap-3 pb-6">
+      <div class="flex gap-3">
         <button
           class="flex-1 py-3.5 rounded-2xl border-2 font-display font-semibold text-sm active:scale-95 transition-transform"
           :style="{ borderColor: COLOR, color: COLOR }"
           @click="showHint"
         >💡 Petunjuk</button>
         <button
-          class="flex-1 py-3.5 rounded-2xl font-display font-semibold text-sm text-white active:scale-95 transition-transform shadow-md"
+          class="flex-1 py-3.5 rounded-2xl font-display font-semibold text-sm text-white active:scale-95 transition-transform shadow-md disabled:opacity-40 disabled:cursor-not-allowed"
           :style="{ backgroundColor: COLOR }"
-          @click="checkAnswer"
+          :disabled="!hasDragged || dragLocked"
+          @click="checkDrag"
         >Cek Jawaban</button>
       </div>
     </div>
 
     <!-- Selesai -->
-    <div v-else class="flex-1 flex flex-col items-center justify-center px-6 text-center">
-      <div class="text-6xl mb-4 animate-bounce-in">🔄</div>
-      <h2 class="font-display font-bold text-2xl text-gray-700 mb-2">Rotasi Selesai!</h2>
-      <div class="bg-blue-50 rounded-2xl p-4 mb-5 text-left">
-        <p class="font-body text-sm text-gray-700 leading-relaxed whitespace-pre-line">{{ rotationActivity.conceptRule }}</p>
+    <div v-else class="flex-1 flex flex-col items-center justify-center px-6 text-center gap-4">
+      <div class="text-6xl animate-bounce-in">🔄</div>
+      <h2 class="font-display font-bold text-2xl text-gray-700">Rotasi Selesai!</h2>
+      <div class="bg-white rounded-2xl p-4 text-left w-full shadow-sm border border-gray-100">
+        <p class="font-display font-semibold text-gray-500 text-xs mb-3 uppercase tracking-wide">Rangkuman Rotasi</p>
+        <div class="space-y-3">
+          <div class="flex items-start gap-2">
+            <div class="w-2 h-2 rounded-full mt-1.5 shrink-0" :style="{ backgroundColor: COLOR }" />
+            <div>
+              <p class="font-display font-semibold text-xs text-gray-700">Rotasi 90° berlawanan jarum jam</p>
+              <p class="font-body text-xs text-gray-500">(x, y) → (−y, x) &nbsp;→&nbsp; A(2,1) → A'(−1, 2)</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-2">
+            <div class="w-2 h-2 rounded-full mt-1.5 shrink-0" :style="{ backgroundColor: COLOR }" />
+            <div>
+              <p class="font-display font-semibold text-xs text-gray-700">Rotasi 180°</p>
+              <p class="font-body text-xs text-gray-500">(x, y) → (−x, −y) &nbsp;→&nbsp; A'(−1,2) → A''(1, −2)</p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 pt-3 border-t border-gray-100">
+          <p class="font-body text-xs text-gray-500 leading-relaxed">
+            Jarak motif terhadap pusat tetap sama — hanya arahnya yang berubah.
+          </p>
+        </div>
       </div>
       <button
         class="w-full py-4 rounded-2xl text-white font-display font-semibold text-base shadow-lg active:scale-95 transition-transform"
@@ -270,7 +324,14 @@ const hintText = computed(() => {
       >Kembali ke Beranda</button>
     </div>
 
-    <FeedbackModal :show="showFeedback" :is-correct="feedbackCorrect" :message="feedbackMessage" @next="onFeedbackNext" />
+    <FeedbackModal
+      :show="showFeedback"
+      :is-correct="feedbackCorrect"
+      :message="feedbackMessage"
+      :from-point="feedbackFromPoint"
+      :to-point="feedbackToPoint"
+      @next="onFeedbackNext"
+    />
   </div>
 </template>
 

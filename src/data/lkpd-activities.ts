@@ -170,9 +170,11 @@ export const dilationActivity: LkpdActivity = {
 // P(1,1) → geser ke (3,2) → refleksi sumbu X → (3,-2) → rotasi 90° CW → (-2,-3)
 export interface ChallengeStep {
   label: string
+  rule: string
   detail: string
   result: Point
   color: string
+  icon: string
 }
 
 export const challengeData = {
@@ -182,28 +184,34 @@ export const challengeData = {
   correctAnswer: { x: -2, y: -3 } as Point,
   steps: [
     {
-      label: '1. Translasi',
-      detail: 'P(1,1) digeser menjadi titik (3,2)',
+      label: 'Translasi',
+      rule: '(x,y) → titik tujuan',
+      detail: 'Titik awal P(1,1) digeser menjadi titik (3,2)',
       result: { x: 3, y: 2 },
-      color: '#EF4444',
+      color: '#ec6585',
+      icon: 'arrow_forward',
     },
     {
-      label: '2. Refleksi Sumbu X',
-      detail: '(x,y) → (x,−y)  →  (3,2) menjadi (3,−2)',
+      label: 'Refleksi Sumbu X',
+      rule: '(x,y) → (x, −y)',
+      detail: '(3,2) → (3,−2) — nilai y berubah tanda',
       result: { x: 3, y: -2 },
-      color: '#F97316',
+      color: '#f79624',
+      icon: 'flip',
     },
     {
-      label: '3. Rotasi 90° Searah Jarum Jam',
-      detail: '(x,y) → (y,−x)  →  (3,−2) menjadi (−2,−3)',
+      label: 'Rotasi 90° Searah Jarum Jam',
+      rule: '(x,y) → (y, −x)',
+      detail: '(3,−2) → (−2,−3) — koordinat ditukar dan tanda x dibalik',
       result: { x: -2, y: -3 },
-      color: '#3B82F6',
+      color: '#3d91cf',
+      icon: 'refresh',
     },
   ] as ChallengeStep[],
   hints: [
-    'Selesaikan langkah per langkah mulai dari translasi.',
-    'Langkah 1: P(1,1) digeser ke titik (3,2).\nLangkah 2: Refleksi sumbu X → (3,2) menjadi (3,−2).',
-    'Langkah 3: Rotasi 90° searah jarum jam → (x,y) → (y,−x) → (−2,−3).\nJawaban akhir: (−2, −3).',
+    'Selesaikan langkah per langkah. Mulai dari translasi: P(1,1) digeser ke (3,2).',
+    'Langkah 2 — Refleksi sumbu X: (x,y) → (x,−y). Jadi (3,2) → (3,−2).',
+    'Langkah 3 — Rotasi 90° CW: (x,y) → (y,−x). Jadi (3,−2) → (−2,−3). Jawaban akhir: (−2, −3).',
   ],
   conceptFeedback:
     'Luar biasa! Kamu berhasil menggabungkan translasi, refleksi, dan rotasi. Itulah kehebatan transformasi geometri dalam motif Karawo!',

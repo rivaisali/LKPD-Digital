@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { ActivityId, ActivityStatus } from '@/domain/types'
-import { saveProgress, getAllProgress, deleteActivityProgress, clearAllProgress } from '@/db/db'
+import { saveProgress, getAllProgress, deleteActivityProgress, clearAllProgress, clearAnswers, clearActivityAnswers } from '@/db/db'
 
 interface ActivityProgress {
   activityId: ActivityId
@@ -78,12 +78,12 @@ export const useProgressStore = defineStore('progress', () => {
 
   async function resetAll() {
     reset()
-    await clearAllProgress()
+    await Promise.all([clearAllProgress(), clearAnswers()])
   }
 
   async function resetActivity(activityId: ActivityId) {
     progress.value[activityId] = { activityId, status: 'not-started', score: 0, attempts: 0 }
-    await deleteActivityProgress(activityId)
+    await Promise.all([deleteActivityProgress(activityId), clearActivityAnswers(activityId)])
   }
 
   return {

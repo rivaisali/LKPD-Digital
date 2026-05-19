@@ -41,6 +41,13 @@ export async function saveAnswer(record: AnswerRecord) {
   await db.answers.add(record)
 }
 
+export async function getCorrectAnswers(activityId: string): Promise<AnswerRecord[]> {
+  return db.answers
+    .where('activityId').equals(activityId)
+    .and((r) => r.isCorrect === true)
+    .toArray()
+}
+
 export async function getStudent() {
   return db.student.toCollection().first()
 }
@@ -65,6 +72,15 @@ export async function deleteActivityProgress(activityId: string) {
 
 export async function clearAllProgress() {
   await db.progress.clear()
+}
+
+export async function clearAnswers() {
+  await db.answers.clear()
+}
+
+export async function clearActivityAnswers(activityId: string) {
+  const ids = await db.answers.where('activityId').equals(activityId).primaryKeys()
+  await db.answers.bulkDelete(ids)
 }
 
 export async function saveReflection(record: ReflectionRecord) {

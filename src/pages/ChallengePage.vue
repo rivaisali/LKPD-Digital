@@ -30,6 +30,7 @@ interface SubStep {
   hint: string
   icon: string
   voiceover: string
+  maxPoints: number  // 7+7+6 = 20 total maks
 }
 
 const subSteps: SubStep[] = [
@@ -46,6 +47,7 @@ const subSteps: SubStep[] = [
     hint: "Titik P(1,1) langsung dipindah ke titik (3,2). Seret P' ke koordinat (3,2).",
     icon: 'arrow_forward',
     voiceover: "Ayo seret motif P' ke posisi hasil translasi! P(1,1) digeser ke titik (3,2).",
+    maxPoints: 7,
   },
   {
     id: 'ch-step-1',
@@ -60,6 +62,7 @@ const subSteps: SubStep[] = [
     hint: "Refleksi sumbu X: (x,y) → (x,−y). Jadi P'(3,2) → P''(3,−2). Nilai y berubah tanda.",
     icon: 'flip',
     voiceover: "Sekarang cerminkan! Seret P'' ke bayangan P'(3,2) terhadap sumbu X.",
+    maxPoints: 7,
   },
   {
     id: 'ch-step-2',
@@ -74,6 +77,7 @@ const subSteps: SubStep[] = [
     hint: "Rotasi 90° CW: (x,y) → (y,−x). Jadi P''(3,−2) → P'''(−2,−3).",
     icon: 'refresh',
     voiceover: "Langkah terakhir! Putar P'' searah jarum jam 90°. Seret P''' ke posisi akhirnya.",
+    maxPoints: 6,
   },
 ]
 
@@ -136,7 +140,7 @@ function checkAnswer() {
   const correct = isSamePoint({ x, y }, currentSubStep.value.target)
 
   if (correct) {
-    const score = calculateScore(attempts.value, usedHint.value)
+    const score = calculateScore(attempts.value, usedHint.value, currentSubStep.value.maxPoints)
     activityScore.value += score
     feedbackCorrect.value = true
     feedbackMessage.value =

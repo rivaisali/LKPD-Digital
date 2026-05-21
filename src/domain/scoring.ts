@@ -1,12 +1,17 @@
 export const MAX_SCORE_PER_ACTIVITY = 20
 export const MAX_TOTAL_SCORE = 100
 
-export function calculateScore(attempts: number, usedHint: boolean): number {
-  if (attempts === 1 && !usedHint) return 20
-  if (attempts === 1 && usedHint) return 15
-  if (attempts === 2) return 15
-  if (attempts === 3) return 10
-  return 5
+/**
+ * Hitung skor satu sub-soal.
+ * maxPoints = nilai penuh sub-soal ini (default 20 untuk aktivitas 1 soal).
+ * Tiap aktivitas membagi MAX_SCORE_PER_ACTIVITY dengan jumlah sub-soalnya.
+ */
+export function calculateScore(attempts: number, usedHint: boolean, maxPoints = 20): number {
+  if (attempts === 1 && !usedHint) return maxPoints
+  if (attempts === 1 && usedHint)  return Math.round(maxPoints * 0.75)
+  if (attempts === 2)               return Math.round(maxPoints * 0.75)
+  if (attempts === 3)               return Math.round(maxPoints * 0.50)
+  return                            Math.round(maxPoints * 0.25)
 }
 
 export function getGrade(score: number): { label: string; emoji: string; color: string } {

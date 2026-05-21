@@ -9,8 +9,8 @@ export default defineConfig({
     vue(),
     tailwindcss(),
     VitePWA({
-      registerType: 'prompt',
-      injectRegister: false,
+      registerType: 'autoUpdate',
+      injectRegister: 'auto',
       pwaAssets: {
         disabled: false,
         config: true,
@@ -30,9 +30,36 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,webp,woff2}'],
+        // Precache semua aset statis termasuk gambar jpg/jpeg
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,webp,woff,woff2,jpg,jpeg}'],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
+        skipWaiting: true,
+        // Tangani navigasi SPA saat offline — semua route kembali ke index.html
+        navigateFallback: 'index.html',
+        navigateFallbackDenylist: [/^\/api/, /^\/sw\.js/],
+        runtimeCaching: [
+          {
+            // Cache CSS stylesheet Google Fonts
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'google-fonts-stylesheets',
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            // Cache file font sebenarnya dari gstatic (Plus Jakarta Sans + Material Symbols)
+            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-webfonts',
+              expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
       },
       devOptions: {
         enabled: false,

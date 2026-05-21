@@ -83,13 +83,16 @@ const draggablePos = computed(() => {
   return currentQ.value.draggable
 })
 
+// 2 sub-soal × 10 poin = 20 poin maks per aktivitas
+const SCORE_PER_SUB = 10
+
 progressStore.setActivityInProgress('rotation')
 
 onMounted(async () => {
   const correct = await getCorrectAnswers('rotation')
   if (correct.length === 0) return
   const correctIds = new Set(correct.map((a) => a.questionId))
-  for (const a of correct) activityScore.value += calculateScore(a.attempts, a.usedHint)
+  for (const a of correct) activityScore.value += calculateScore(a.attempts, a.usedHint, SCORE_PER_SUB)
   const first = subQuestions.findIndex((q) => !correctIds.has(q.id))
   currentIdx.value = first === -1 ? subQuestions.length - 1 : first
 })
@@ -110,7 +113,7 @@ function checkDrag() {
   const correct = isSamePoint({ x, y }, currentQ.value.target)
 
   if (correct) {
-    const score = calculateScore(attempts.value, usedHint.value)
+    const score = calculateScore(attempts.value, usedHint.value, SCORE_PER_SUB)
     activityScore.value += score
     feedbackCorrect.value = true
     dragLocked.value      = true

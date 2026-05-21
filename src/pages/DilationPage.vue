@@ -71,13 +71,16 @@ const canCheck = computed(() => {
   return sliderMoved.value && answerX.value !== '' && answerY.value !== ''
 })
 
+// 2 sub-soal × 10 poin = 20 poin maks per aktivitas
+const SCORE_PER_SUB = 10
+
 progressStore.setActivityInProgress('dilation')
 
 onMounted(async () => {
   const correct = await getCorrectAnswers('dilation')
   if (correct.length === 0) return
   const correctIds = new Set(correct.map((a) => a.questionId))
-  for (const a of correct) activityScore.value += calculateScore(a.attempts, a.usedHint)
+  for (const a of correct) activityScore.value += calculateScore(a.attempts, a.usedHint, SCORE_PER_SUB)
   const first = subQuestions.findIndex((q) => !correctIds.has(q.id))
   currentIdx.value = first === -1 ? subQuestions.length - 1 : first
 })
@@ -91,7 +94,7 @@ function checkAnswer() {
   attempts.value++
 
   if (currentQ.value.isText) {
-    const score = calculateScore(attempts.value, usedHint.value)
+    const score = calculateScore(attempts.value, usedHint.value, SCORE_PER_SUB)
     activityScore.value += score
     feedbackCorrect.value   = true
     feedbackMessage.value   = 'Jawabanmu benar! Motif menjadi 2× lebih besar, tetapi bentuknya tetap sama.'
@@ -114,7 +117,7 @@ function checkAnswer() {
   const correct = isSamePoint({ x, y }, currentQ.value.target)
 
   if (correct) {
-    const score = calculateScore(attempts.value, usedHint.value)
+    const score = calculateScore(attempts.value, usedHint.value, SCORE_PER_SUB)
     activityScore.value += score
     feedbackCorrect.value   = true
     feedbackMessage.value   = `Jawabanmu benar! Dengan k=2, motif A(2,2) membesar menjadi A'(${x},${y}).`

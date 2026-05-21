@@ -122,6 +122,9 @@ const draggablePos = computed(() => {
   return currentQ.value.draggable
 })
 
+// 4 sub-soal × 5 poin = 20 poin maks per aktivitas
+const SCORE_PER_SUB = 5
+
 progressStore.setActivityInProgress('translation')
 
 onMounted(async () => {
@@ -130,7 +133,7 @@ onMounted(async () => {
   const correctIds = new Set(correct.map((a) => a.questionId))
   // Pulihkan skor dari sesi sebelumnya
   for (const a of correct) {
-    activityScore.value += calculateScore(a.attempts, a.usedHint)
+    activityScore.value += calculateScore(a.attempts, a.usedHint, SCORE_PER_SUB)
   }
   // Lompat ke sub-soal pertama yang belum terjawab benar
   const first = subQuestions.findIndex((q) => !correctIds.has(q.id))
@@ -155,7 +158,7 @@ function checkDrag() {
   const correct = isSamePoint({ x, y }, currentQ.value.target)
 
   if (correct) {
-    const score = calculateScore(attempts.value, usedHint.value)
+    const score = calculateScore(attempts.value, usedHint.value, SCORE_PER_SUB)
     activityScore.value += score
     feedbackCorrect.value = true
     dragLocked.value      = true
@@ -200,7 +203,7 @@ function checkInput() {
   const correct = isSamePoint({ x, y }, currentQ.value.target)
 
   if (correct) {
-    const score = calculateScore(attempts.value, usedHint.value)
+    const score = calculateScore(attempts.value, usedHint.value, SCORE_PER_SUB)
     activityScore.value += score
     feedbackCorrect.value   = true
     feedbackMessage.value   = 'Jawabanmu benar. Motif hanya berpindah tanpa mengubah bentuk dan ukurannya.'

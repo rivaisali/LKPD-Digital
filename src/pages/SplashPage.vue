@@ -28,7 +28,7 @@ async function submitOnboarding() {
   if (!inputName.value.trim()) { nameError.value = 'Nama harus diisi'; return }
   if (!inputClass.value.trim()) { classError.value = 'Kelas harus diisi'; return }
   await studentStore.save(inputName.value.trim(), inputClass.value.trim())
-  router.push('/home')
+  router.push('/story')
 }
 
 async function mulaiBaruConfirmed() {

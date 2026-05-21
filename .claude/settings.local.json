@@ -4,7 +4,10 @@
       "Bash(pnpm add *)",
       "Bash(pnpm build *)",
       "Bash(pnpm dev *)",
-      "Bash(curl -s http://localhost:5173/)"
+      "Bash(curl -s http://localhost:5173/)",
+      "Bash(npx tsc *)",
+      "Bash(npx vue-tsc *)",
+      "Bash(npx vite *)"
     ]
   }
 }

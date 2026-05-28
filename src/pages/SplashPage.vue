@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStudentStore } from '@/stores/useStudentStore'
 import { useProgressStore } from '@/stores/useProgressStore'
+import { useAppUpdate } from '@/composables/useAppUpdate'
 
 const router = useRouter()
 const studentStore = useStudentStore()
@@ -43,6 +44,9 @@ const completedCount = () =>
   (['translation', 'reflection', 'rotation', 'dilation'] as const).filter(
     (id) => progressStore.progress[id]?.status === 'completed',
   ).length
+
+const { updating, done, forceUpdate } = useAppUpdate()
+const showUpdateConfirm = ref(false)
 </script>
 
 <template>
@@ -127,9 +131,16 @@ const completedCount = () =>
           >Mulai Petualangan</button>
         </div>
 
-        <button class="font-body text-xs text-on-surface-variant underline underline-offset-2" @click="router.push('/guide')">
-          Petunjuk
-        </button>
+        <div class="flex items-center gap-4">
+          <button class="font-body text-xs text-on-surface-variant underline underline-offset-2" @click="router.push('/guide')">
+            Petunjuk
+          </button>
+          <span class="text-outline-variant text-xs">·</span>
+          <button class="font-body text-xs text-blue-500 underline underline-offset-2 flex items-center gap-1" @click="showUpdateConfirm = true">
+            <span class="material-symbols-outlined text-sm">system_update</span>
+            Update App
+          </button>
+        </div>
       </div>
     </template>
 
@@ -199,9 +210,16 @@ const completedCount = () =>
           </div>
         </div>
 
-        <button class="font-body text-xs text-on-surface-variant underline underline-offset-2" @click="router.push('/guide')">
-          Petunjuk
-        </button>
+        <div class="flex items-center gap-4">
+          <button class="font-body text-xs text-on-surface-variant underline underline-offset-2" @click="router.push('/guide')">
+            Petunjuk
+          </button>
+          <span class="text-outline-variant text-xs">·</span>
+          <button class="font-body text-xs text-blue-500 underline underline-offset-2 flex items-center gap-1" @click="showUpdateConfirm = true">
+            <span class="material-symbols-outlined text-sm">system_update</span>
+            Update App
+          </button>
+        </div>
       </div>
     </template>
 
@@ -228,6 +246,46 @@ const completedCount = () =>
               class="flex-1 py-3.5 rounded-2xl font-display font-bold text-sm text-white bg-orange-500 shadow-md active:scale-95 transition-transform"
               @click="mulaiBaruConfirmed"
             >Ya, Reset Skor</button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Konfirmasi Update Aplikasi -->
+    <Transition name="modal">
+      <div v-if="showUpdateConfirm" class="absolute inset-0 z-50 flex items-end">
+        <div class="absolute inset-0 bg-black/40" @click="!updating && (showUpdateConfirm = false)" />
+        <div class="relative w-full bg-white rounded-t-3xl px-6 pt-8 pb-8">
+          <div class="flex justify-center mb-4">
+            <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center">
+              <span class="material-symbols-outlined text-blue-500 text-2xl" style="font-variation-settings: 'FILL' 1;">system_update</span>
+            </div>
+          </div>
+          <h2 class="font-display font-bold text-xl text-on-surface text-center mb-2">Update Aplikasi?</h2>
+          <p class="font-body text-sm text-on-surface-variant text-center mb-6 leading-relaxed">
+            Semua cache akan dihapus dan aplikasi dimuat ulang untuk mendapatkan versi terbaru.
+            <br /><span class="text-orange-500 font-semibold">Data progres belajar tidak akan terhapus.</span>
+          </p>
+
+          <div v-if="updating" class="flex items-center justify-center gap-3 py-3 mb-4 bg-blue-50 rounded-2xl">
+            <svg class="animate-spin w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+            </svg>
+            <span class="font-body text-blue-600 text-sm">
+              {{ done ? 'Berhasil! Memuat ulang...' : 'Menghapus cache...' }}
+            </span>
+          </div>
+
+          <div v-else class="flex gap-3">
+            <button
+              class="flex-1 py-3.5 rounded-2xl border-2 border-outline-variant font-display font-semibold text-sm text-on-surface-variant active:scale-95 transition-transform"
+              @click="showUpdateConfirm = false"
+            >Batal</button>
+            <button
+              class="flex-1 py-3.5 rounded-2xl font-display font-bold text-sm text-white bg-blue-500 shadow-md active:scale-95 transition-transform"
+              @click="forceUpdate"
+            >Ya, Update</button>
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { useStudentStore } from '@/stores/useStudentStore'
 import { useProgressStore } from '@/stores/useProgressStore'
 import { getStarCount } from '@/domain/scoring'
 import type { ActivityId } from '@/domain/types'
+import { useAppUpdate } from '@/composables/useAppUpdate'
 
 const studentStore = useStudentStore()
 const progressStore = useProgressStore()
@@ -16,6 +17,10 @@ const tempClass = ref(studentStore.className)
 
 // Reset confirmation
 const resetTarget = ref<{ id: ActivityId; label: string } | null>(null)
+
+// App update
+const { updating, done, forceUpdate } = useAppUpdate()
+const showUpdateConfirm = ref(false)
 
 async function saveProfile() {
   await studentStore.save(tempName.value, tempClass.value)
@@ -87,6 +92,24 @@ const activities = [
         </div>
       </div>
 
+      <!-- Update Aplikasi -->
+      <div class="bg-white rounded-3xl p-4 shadow-sm">
+        <h3 class="font-display font-semibold text-gray-600 text-sm mb-3">Pembaruan Aplikasi</h3>
+        <div class="flex items-center gap-3 rounded-2xl px-3 py-3 border border-gray-100">
+          <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-blue-500 text-lg">system_update</span>
+          </div>
+          <div class="flex-1">
+            <p class="font-display font-semibold text-sm text-on-surface">Update Aplikasi</p>
+            <p class="font-body text-xs text-gray-400">Hapus cache &amp; muat ulang versi terbaru</p>
+          </div>
+          <button
+            class="px-3 py-1.5 rounded-xl bg-blue-500 text-white font-display font-semibold text-xs active:bg-blue-600 transition-colors"
+            @click="showUpdateConfirm = true"
+          >Update</button>
+        </div>
+      </div>
+
       <!-- Reset per kategori -->
       <div class="bg-white rounded-3xl p-4 shadow-sm">
         <h3 class="font-display font-semibold text-gray-600 text-sm mb-3">Progres Aktivitas</h3>
@@ -133,6 +156,47 @@ const activities = [
     </div>
 
     <BottomNav />
+
+    <!-- Konfirmasi Update Aplikasi -->
+    <Transition name="modal">
+      <div v-if="showUpdateConfirm" class="absolute inset-0 z-50 flex items-end">
+        <div class="absolute inset-0 bg-black/40" @click="!updating && (showUpdateConfirm = false)" />
+        <div class="relative w-full bg-white rounded-t-3xl px-6 pt-8 pb-8">
+          <div class="flex justify-center mb-4">
+            <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center">
+              <span class="material-symbols-outlined text-blue-500 text-2xl" style="font-variation-settings: 'FILL' 1;">system_update</span>
+            </div>
+          </div>
+          <h2 class="font-display font-bold text-xl text-on-surface text-center mb-2">Update Aplikasi?</h2>
+          <p class="font-body text-sm text-on-surface-variant text-center mb-6 leading-relaxed">
+            Semua cache akan dihapus dan aplikasi akan dimuat ulang untuk mendapatkan versi terbaru.
+            <br /><span class="text-orange-500 font-semibold">Data progres belajar tidak akan terhapus.</span>
+          </p>
+
+          <!-- Status saat updating -->
+          <div v-if="updating" class="flex items-center justify-center gap-3 py-3 mb-4 bg-blue-50 rounded-2xl">
+            <svg class="animate-spin w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+            </svg>
+            <span class="font-body text-blue-600 text-sm">
+              {{ done ? 'Berhasil! Memuat ulang...' : 'Menghapus cache...' }}
+            </span>
+          </div>
+
+          <div v-else class="flex gap-3">
+            <button
+              class="flex-1 py-3.5 rounded-2xl border-2 border-outline-variant font-display font-semibold text-sm text-on-surface-variant active:scale-95 transition-transform"
+              @click="showUpdateConfirm = false"
+            >Batal</button>
+            <button
+              class="flex-1 py-3.5 rounded-2xl font-display font-bold text-sm text-white bg-blue-500 shadow-md active:scale-95 transition-transform"
+              @click="forceUpdate"
+            >Ya, Update</button>
+          </div>
+        </div>
+      </div>
+    </Transition>
 
     <!-- Konfirmasi reset kategori -->
     <Transition name="modal">

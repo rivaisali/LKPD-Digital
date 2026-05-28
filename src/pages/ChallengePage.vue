@@ -204,7 +204,7 @@ function showHint() {
 
 <template>
   <div class="h-full flex flex-col relative bg-bg">
-    <TopBar title="Tantangan Akhir" :color="COLOR" />
+    <TopBar title="Tantangan Akhir" :color="COLOR" :show-help="true" @help="showHint" />
 
     <!-- ── SOAL ── -->
     <div v-if="!isFinished" class="flex-1 page-scroll hide-scrollbar px-4 pb-4 pt-3">

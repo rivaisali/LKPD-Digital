@@ -24,7 +24,7 @@ const subQuestions = [
     isText: false,
     question: 'a. Tentukan posisi titik motif setelah diperbesar!',
     target: { x: 4, y: 4 },
-    hint: 'Dilatasi: kalikan setiap koordinat dengan k. Rumus: (kx, ky) = (2×2, 2×2) = (4, 4).',
+    hint: 'Dilatasi: kalikan setiap koordinat dengan faktor skala k. Rumus: (x, y) → (kx, ky). Geser slider ke k=2, lalu hitung!',
     voiceover: 'Geser slider ke k=2, lalu amati di mana motif berpindah!',
   },
   {

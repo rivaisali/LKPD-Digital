@@ -28,7 +28,7 @@ const subQuestions = [
     target: { x: -4, y: 3 },
     reflection: { x: -4, y: 3, label: "A'(-4,3)" },
     rule: '(x, y) → (−x, y)',
-    hint: "Refleksi sumbu Y: nilai x berubah tanda, nilai y tetap. Rumus: A(4,3) → (−4, 3).",
+    hint: "Refleksi sumbu Y: nilai x berubah tanda (positif jadi negatif atau sebaliknya), nilai y tetap. Coba terapkan!",
     voiceover: 'Ketuk garis cermin Sumbu Y untuk melihat bayangan motifnya!',
   },
   {
@@ -40,7 +40,7 @@ const subQuestions = [
     target: { x: 4, y: -3 },
     reflection: { x: 4, y: -3, label: "A'(4,-3)" },
     rule: '(x, y) → (x, −y)',
-    hint: "Refleksi sumbu X: nilai y berubah tanda, nilai x tetap. Rumus: A(4,3) → (4, −3).",
+    hint: "Refleksi sumbu X: nilai y berubah tanda (positif jadi negatif atau sebaliknya), nilai x tetap sama. Coba terapkan!",
     voiceover: 'Sekarang bayangkan cermin ada di sumbu X. Di mana posisi bayangannya?',
   },
 ]

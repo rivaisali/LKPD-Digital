@@ -34,7 +34,7 @@ const subQuestions = [
     fixedMotifs: [] as Array<Point & { label: string; faded?: boolean }>,
     arcGuide: { from: { x: 2, y: 1 }, angleDeg: 90 },  // CCW
     xMin: -3, xMax: 4, yMin: -1, yMax: 4,
-    hint: 'Rotasi 90° berlawanan jarum jam: (x,y) → (−y, x). Jadi A(2,1) → (−1, 2).',
+    hint: 'Rotasi 90° berlawanan jarum jam: gunakan rumus (x, y) → (−y, x). Coba terapkan pada koordinat titik A!',
     voiceover: 'Seret motif mengikuti arah panah, berlawanan arah jarum jam sebesar 90°!',
     ruleLabel: '90° CCW: (x,y) → (−y, x)',
   },
@@ -50,7 +50,7 @@ const subQuestions = [
     ] as Array<Point & { label: string; faded?: boolean }>,
     arcGuide: { from: { x: -1, y: 2 }, angleDeg: 180 },   // CCW (kiri, lanjutan dari sub-Q a)
     xMin: -3, xMax: 4, yMin: -3, yMax: 4,
-    hint: "Rotasi 180°: (x,y) → (−x,−y). Jadi A'(−1,2) → (1,−2).",
+    hint: "Rotasi 180°: gunakan rumus (x, y) → (−x, −y). Terapkan pada koordinat A' yang kamu temukan sebelumnya!",
     voiceover: 'Sekarang seret motif memutar 180° melewati titik pusat O(0,0)!',
     ruleLabel: '180°: (x,y) → (−x, −y)',
   },

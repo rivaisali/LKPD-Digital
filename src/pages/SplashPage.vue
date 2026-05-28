@@ -128,7 +128,7 @@ const completedCount = () =>
         </div>
 
         <button class="font-body text-xs text-on-surface-variant underline underline-offset-2" @click="router.push('/guide')">
-          Tentang Aplikasi
+          Petunjuk
         </button>
       </div>
     </template>
@@ -200,7 +200,7 @@ const completedCount = () =>
         </div>
 
         <button class="font-body text-xs text-on-surface-variant underline underline-offset-2" @click="router.push('/guide')">
-          Tentang Aplikasi
+          Petunjuk
         </button>
       </div>
     </template>

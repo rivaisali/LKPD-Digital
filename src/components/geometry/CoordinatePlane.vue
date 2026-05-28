@@ -186,7 +186,7 @@ function labelPos(svg: { cx: number; cy: number }, p: Point) {
           :y="startSvg.cy - 11"
           :text-anchor="labelPos(startSvg, startPoint!).anchor"
           font-size="9.5" fill="white" font-family="Nunito,sans-serif" font-weight="800"
-        >{{ startPoint?.label }}({{ startPoint?.x }},{{ startPoint?.y }})</text>
+        >{{ startPoint?.label }}</text>
       </g>
     </g>
 
@@ -226,7 +226,7 @@ function labelPos(svg: { cx: number; cy: number }, p: Point) {
           :y="endSvg.cy - 11"
           :text-anchor="labelPos(endSvg, endPoint).anchor"
           font-size="9.5" fill="white" font-family="Nunito,sans-serif" font-weight="800"
-        >{{ endPoint.label }}({{ endPoint.x }},{{ endPoint.y }})</text>
+        >{{ endPoint.label }}</text>
       </g>
     </g>
   </svg>

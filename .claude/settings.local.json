@@ -7,7 +7,15 @@
       "Bash(curl -s http://localhost:5173/)",
       "Bash(npx tsc *)",
       "Bash(npx vue-tsc *)",
-      "Bash(npx vite *)"
+      "Bash(npx vite *)",
+      "Read(//Users/m.rivai.sali/Library/Android/sdk/**)",
+      "Read(//Users/m.rivai.sali/Library/Android/sdk/build-tools/**)",
+      "Bash(npx cap *)",
+      "Bash(npm run *)",
+      "Bash(./gradlew assembleDebug)",
+      "Read(//Library/Java/JavaVirtualMachines/**)",
+      "Bash(/usr/libexec/java_home -V)",
+      "Bash(pnpm remove *)"
     ]
   }
 }

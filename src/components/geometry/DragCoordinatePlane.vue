@@ -238,7 +238,7 @@ function labelPos(cx: number) {
         :y="toSvg(fm).cy - 10"
         :text-anchor="labelPos(toSvg(fm).cx).anchor"
         font-size="8.5" fill="white" font-family="Nunito" font-weight="800"
-      >{{ fm.label }}({{ fm.x }},{{ fm.y }})</text>
+      >{{ fm.label }}</text>
     </g>
 
     <!-- ── Snap preview (while dragging) ── -->

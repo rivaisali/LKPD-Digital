@@ -94,18 +94,28 @@ function checkAnswer() {
   attempts.value++
 
   if (currentQ.value.isText) {
-    const score = calculateScore(attempts.value, usedHint.value, SCORE_PER_SUB)
-    activityScore.value += score
-    feedbackCorrect.value   = true
-    feedbackMessage.value   = 'Jawabanmu benar! Motif menjadi 2× lebih besar, tetapi bentuknya tetap sama.'
+    const ans = textAnswer.value.toLowerCase()
+    const mentionsBesar = /besar|diperbesar|membesar|perbesaran|2 kali|dua kali|bertambah besar|lebih besar/.test(ans)
+    const correct = mentionsBesar
+    if (correct) {
+      const score = calculateScore(attempts.value, usedHint.value, SCORE_PER_SUB)
+      activityScore.value += score
+      feedbackCorrect.value = true
+      feedbackMessage.value = 'Jawabanmu benar! Motif menjadi 2 kali lebih besar dari ukuran semula, bentuknya tetap sama.'
+      saveAnswer({
+        activityId: 'dilation', questionId: currentQ.value.id,
+        answerX: 0, answerY: 0,
+        isCorrect: true, attempts: attempts.value, usedHint: usedHint.value,
+        createdAt: new Date().toISOString(),
+      })
+    } else {
+      feedbackCorrect.value = false
+      feedbackMessage.value = attempts.value >= 2
+        ? 'Jawaban yang benar: motif mengalami perubahan ukuran — menjadi 2 kali lebih besar, tetapi bentuknya tetap sama.'
+        : 'Belum tepat! Perhatikan perubahan ukuran motif sebelum dan sesudah dilatasi.'
+    }
     feedbackFromPoint.value = undefined
     feedbackToPoint.value   = undefined
-    saveAnswer({
-      activityId: 'dilation', questionId: currentQ.value.id,
-      answerX: 0, answerY: 0,
-      isCorrect: true, attempts: attempts.value, usedHint: usedHint.value,
-      createdAt: new Date().toISOString(),
-    })
     showFeedback.value = true
     return
   }
@@ -232,13 +242,13 @@ function showHint() {
                   </div>
                   <input
                     v-model.number="sliderValue"
-                    type="range" min="1" max="3" step="0.5"
+                    type="range" min="1" max="2" step="0.5"
                     class="w-full"
                     :style="{ accentColor: COLOR }"
                     @input="onSliderInput"
                   />
                   <div class="flex justify-between mt-1 text-[10px] text-gray-400 font-body">
-                    <span>1</span><span>1.5</span><span>2</span><span>2.5</span><span>3</span>
+                    <span>1</span><span>1.5</span><span>2</span>
                   </div>
                 </div>
               </div>
@@ -371,10 +381,6 @@ function showHint() {
         <!-- Pertanyaan teks -->
         <div class="bg-white rounded-2xl p-4 mb-3 shadow-sm border border-gray-100">
           <p class="font-display font-semibold text-gray-700 text-sm mb-3 leading-snug">{{ currentQ.question }}</p>
-          <div class="rounded-xl p-3 mb-3" :style="{ backgroundColor: COLOR + '08', borderLeft: `3px solid ${COLOR}` }">
-            <p class="font-body text-xs text-gray-500 mb-1">Contoh jawaban:</p>
-            <p class="font-body text-xs text-gray-600 italic">"Terjadi perubahan ukuran motif. Motif menjadi 2 kali lebih besar."</p>
-          </div>
           <textarea
             v-model="textAnswer"
             rows="3"

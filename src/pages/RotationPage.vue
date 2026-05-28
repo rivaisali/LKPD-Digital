@@ -18,7 +18,7 @@ const COLOR = '#3d91cf'
 
 const dragSteps = [
   { label: 'a', text: 'Seret motif berlawanan arah jarum jam sebesar 90° → ke titik (−1,2)' },
-  { label: 'b', text: 'Seret motif searah jarum jam sebesar 180° melewati pusat → ke titik (1,−2)' },
+  { label: 'b', text: 'Seret motif berlawanan arah jarum jam sebesar 180° melewati pusat → ke titik (1,−2)' },
 ]
 
 // Sub-Q a: A(2,1) → rotate 90° CCW → A'(-1,2)
@@ -191,7 +191,7 @@ function showHint() {
           <strong>berlawanan arah jarum jam sebesar 90°</strong> terhadap titik pusat (0,0).
           <br /><br />
           Setelah beberapa menit, Ibu Nita melanjutkan lagi dengan memutar motif
-          <strong>searah jarum jam sebesar 180°</strong>. Nita sangat terkesan melihat pola karawo yang terbentuk.
+          <strong>berlawanan arah jarum jam sebesar 180°</strong>. Nita sangat terkesan melihat pola karawo yang terbentuk.
         </div>
       </div>
 

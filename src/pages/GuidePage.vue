@@ -58,7 +58,7 @@ const guideItems = [
       >
         <span class="material-symbols-outlined text-2xl">arrow_back</span>
       </button>
-      <h1 class="font-display font-bold text-xl text-on-surface">Petunjuk</h1>
+      <h1 class="font-display font-bold text-xl text-on-surface">Petunjuk Penggunaan</h1>
       <div class="w-12" />
     </header>
 
